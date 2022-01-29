@@ -1,5 +1,5 @@
 import  React, {useState, useEffect} from 'react';
-import { KeyboardAvoidingView, TouchableOpacity,TextInput, Text, View, Image, StatusBar, Animated } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity,TextInput, Text, View, Image, StatusBar, Animated, ToastAndroid} from 'react-native';
 import {styles} from './styles';
 import {MaterialIcons} from '@expo/vector-icons';
 
@@ -23,9 +23,9 @@ export default function LoginScreen({navigation}) {
             let jsonLogin = await response.json().then( data => {
                 console.log(data)
                 if(data ==="Credenciais incorretas"){
-                    console.warn("Errado")
+                    ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
                 }else{
-                    console.warn("correto")
+                    ToastAndroid.show("Credenciais corretas", ToastAndroid.LONG)
                 }
             })
 
