@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Vaga.belongsTo(models.Empresa)
-      Vaga.hasMany(models.Candidaturas)
     }
   };
   Vaga.init({

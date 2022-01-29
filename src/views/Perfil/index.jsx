@@ -1,5 +1,5 @@
 import { React } from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, StatusBar } from 'react-native';
 import { Divider } from 'react-native-elements';
 import {styles} from './styles'
 import AboutUser from '../../components/studentComponents/AboutUser';

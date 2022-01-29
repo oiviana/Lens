@@ -1,11 +1,12 @@
 import React from "react";
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Home from './views/Home';
-import Notificacoes from './views/Notificacoes';
-import Perfil from './views/Perfil';
-import Vagas from './views/Vagas';
-
+import HomeNavigator from "./HomeNavigator";
+import NotificationNavigator from "./NotificationNavigator";
+import UserNavigator from "./UserNavigator";
+import LoginScreen from "../views/Login";
+import VacancyNavigator from "./VacancyNavigator";
 import {Entypo, Feather} from '@expo/vector-icons';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +27,7 @@ export default function Routes(){
         >
             <Tab.Screen 
             name="Home" 
-            component={Home}
+            component={HomeNavigator}
             options={{
                 tabBarIcon:({size, color}) => (
                     <Feather name="grid" size={size} color={color}/>
@@ -36,7 +37,7 @@ export default function Routes(){
 
             <Tab.Screen 
             name="Vagas" 
-            component={Vagas}
+            component={VacancyNavigator}
             options={{
                 tabBarIcon:({size, color}) => (
                     <Feather name="briefcase" size={size} color={color}/>
@@ -46,7 +47,7 @@ export default function Routes(){
 
             <Tab.Screen 
             name="Notificações" 
-            component={Notificacoes}
+            component={NotificationNavigator}
             options={{
                 tabBarIcon:({size, color}) => (
                     <Feather name="bell" size={size} color={color}/>
@@ -55,7 +56,7 @@ export default function Routes(){
             />
 
             <Tab.Screen name="Perfil"
-             component={Perfil}
+             component={UserNavigator}
              options={{
                 tabBarIcon:({size, color}) => (
                     <Feather name="user" size={size} color={color}/>

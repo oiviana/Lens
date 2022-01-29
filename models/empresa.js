@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Empresa.belongsTo(models.Area)
       Empresa.belongsTo(models.Endereco_empresa)
-      Instformacao.hasMany(models.Vaga)
+      Empresa.hasMany(models.Vaga)
     }
   };
   Empresa.init({

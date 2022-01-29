@@ -1,14 +1,54 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const models = require('./models');
+let estudante = models.Estudante;
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
-app.get('/', (req, res) =>{
-    res.send("Este servidor está funcionando")
-})
+
+
+
+app.post('/login',async (req, res)=>{
+    let response = await estudante.findOne({
+        where:{ email: req.body.email, senha: req.body.password }
+    });
+    if(response === null){
+        res.send(JSON.stringify('Credenciais incorretas'))
+    }else{
+        res.send(response);
+        console.log(response)
+    }
+});
+
+// let area = models.Area 
+
+// app.get('/createArea', async (req, res) =>{
+//     let createArea = await area.create({
+//         nome_area: "Direito",
+//         createAt: new Date(),
+//         updatedAt: new Date()
+//     });
+//     res.send('Área catalogada com sucesso')
+// });
+
+// app.get('/readArea', async (req, res) =>{
+//     let readArea = await area.findAll()
+//     res.send(readArea)
+//     });
+
+// app.get('/updateArea', async (req, res) =>{
+//     let updateArea = await area.findByPk(4).then((response)=>{
+//         response.nome_area = 'direitinho';
+//         response.save();
+//     })
+//     res.send(updateArea)
+//     });    
+
+
 
 let port = process.env.PORT || 3000;
 app.listen(port, (req, res) =>{
