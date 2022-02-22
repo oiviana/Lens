@@ -15,7 +15,11 @@ export default function LoginNavigator() {
                        headerShown: false
                 }}/>
                 <Stack.Screen name="Cadastro" component={Cadastro} />
+                <Stack.Screen name="MainScreen" component={Main} options = {{
+                    headerShown: false
+                }} />
             </Stack.Navigator>
+            
   
         
     );

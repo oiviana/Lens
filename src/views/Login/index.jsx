@@ -9,7 +9,7 @@ export default function LoginScreen({navigation}) {
     const [password ,setPassword] = useState(initialState=null);
     
     async function sendLogin(){
-        let response = await fetch('http://192.168.1.3:3000/login', {
+        let response = await fetch('http://192.168.1.11:3000/login', {
             method: 'POST',
             headers: {
               Accept: 'application/json',
@@ -25,7 +25,7 @@ export default function LoginScreen({navigation}) {
                 if(data ==="Credenciais incorretas"){
                     ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
                 }else{
-                    ToastAndroid.show("Credenciais corretas", ToastAndroid.LONG)
+                    navigation.navigate('MainScreen')
                 }
             })
 
