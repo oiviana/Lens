@@ -2,10 +2,9 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
     container:{
-        padding:6
+        padding:10
     },
     headerVaga:{
-        backgroundColor:'pink',
         flexDirection:'row'
     },
     companyImage:{
@@ -17,5 +16,19 @@ const styles = StyleSheet.create({
         marginLeft:5,
         marginRight: 20  
     },
+    vacancyTitle:{
+        fontSize:20,
+        fontWeight:'bold',
+        marginTop: 30       
+    },
+    dadosVaga:{
+        padding:8
+    },
+    dadoVaga:{
+        fontSize:15,
+        paddingBottom:3,
+        paddingTop:3
+    }
+
 });
 export{styles}

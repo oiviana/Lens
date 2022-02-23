@@ -1,36 +1,38 @@
 import { React } from 'react';
-import { Text, ScrollView,TouchableOpacity,Image,View} from 'react-native';
+import { Text, ScrollView,TouchableOpacity,Image,View, FlatList} from 'react-native';
 import {styles} from './styles';
 import { Divider } from 'react-native-elements';
+import vagas from '../../assets/vagas';
 
-export default function Vagas() {
+export default function Vagas({navigation}) {
+    
+    function getVagas({item}){
+      return(
+        <>
+        <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('AboutVacancy')}>
+        <Image
+        style={styles.companyImage}
+        source={require('../../assets/img/testes/logo_fatec.png')}
+        />
+         <View style={styles.vacancyContent}>
+           <Text style={styles.vacancyTitle}>{item.nome}</Text>
+           <Text style={styles.vacancyCompany}>{item.empresa} - {item.turno}</Text>
+           <Text style={styles.vacancyDate}>{item.data}</Text>
+         </View>
+      </TouchableOpacity>
+      <Divider width={1} color='#DCDCDC'/>
+      </>
+      );
+
+
+    }
     return(
         <ScrollView style={styles.container}>
-            <TouchableOpacity style={styles.content}>
-             <Image
-             style={styles.companyImage}
-             source={require('../../assets/img/testes/logo_fatec.png')}
-             />
-              <View style={styles.vacancyContent}>
-                <Text style={styles.vacancyTitle}>Desenvolvedor front-end</Text>
-                <Text style={styles.vacancyCompany}>Nome da empresa - turno</Text>
-                <Text style={styles.vacancyDate}>18/01/2022</Text>
-              </View>
-           </TouchableOpacity>
-           <Divider width={1} color='#DCDCDC'/>
-
-           <TouchableOpacity style={styles.content}>
-             <Image
-             style={styles.companyImage}
-             source={require('../../assets/img/testes/logo_fatec.png')}
-             />
-              <View style={styles.vacancyContent}>
-                <Text style={styles.vacancyTitle}>Desenvolvedor front-end</Text>
-                <Text style={styles.vacancyCompany}>Nome da empresa - turno</Text>
-                <Text style={styles.vacancyDate}>18/01/2022</Text>
-              </View>
-           </TouchableOpacity>
-           <Divider width={1} color='#DCDCDC'/>
+          <FlatList
+          keyExtractor={vaga => vaga.id.toString()}
+          data={vagas}
+          renderItem={getVagas}
+          />
         </ScrollView>
 
     );
