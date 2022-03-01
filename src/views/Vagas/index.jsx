@@ -23,8 +23,6 @@ export default function Vagas({navigation}) {
       <Divider width={1} color='#DCDCDC'/>
       </>
       );
-
-
     }
     return(
         <ScrollView style={styles.container}>

@@ -28,7 +28,17 @@ const styles = StyleSheet.create({
         fontSize:15,
         paddingBottom:3,
         paddingTop:3
-    }
-
+    },
+    title:{
+        fontSize:23,
+        fontWeight:'600',
+        padding:5,
+        marginTop:4
+    },
+    descriptionContent:{
+        textAlign:'justify',
+        padding:5,
+        marginBottom:10
+    }   
 });
 export{styles}
