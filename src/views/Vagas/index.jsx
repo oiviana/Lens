@@ -25,13 +25,13 @@ export default function Vagas({navigation}) {
       );
     }
     return(
-        <ScrollView style={styles.container}>
           <FlatList
+          style={styles.container}
           keyExtractor={vaga => vaga.id.toString()}
           data={vagas}
           renderItem={getVagas}
           />
-        </ScrollView>
+
 
     );
 }

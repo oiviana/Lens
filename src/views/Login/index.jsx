@@ -2,6 +2,7 @@ import  React, {useState, useEffect} from 'react';
 import { KeyboardAvoidingView, TouchableOpacity,TextInput, Text, View, Image, StatusBar, Animated, ToastAndroid} from 'react-native';
 import {styles} from './styles';
 import {MaterialIcons} from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 export default function LoginScreen({navigation}) {
@@ -25,7 +26,10 @@ export default function LoginScreen({navigation}) {
                 if(data ==="Credenciais incorretas"){
                     ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
                 }else{
-                    navigation.navigate('MainScreen')
+                    // AsyncStorage.setItem('userData', JSON.stringify(jsonLogin))
+                    // let dataStorage = AsyncStorage.getItem('userData')
+                    // console.log(JSON.parse(dataStorage))
+                     navigation.navigate('MainScreen')
                 }
             })
 

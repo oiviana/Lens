@@ -10,13 +10,14 @@ export default function Routes() {
     return(
     
             <Stack.Navigator>
+                  <Stack.Screen name="LoginScreen" component={LoginNavigator} options={{
+                       headerShown: false
+                }}/>
+                
                   <Stack.Screen name="Main" component={Main} options={{
                        headerShown: false
                 }}/>
                 
-                <Stack.Screen name="LoginScreen" component={LoginNavigator} options={{
-                       headerShown: false
-                }}/>
             </Stack.Navigator>
   
         
