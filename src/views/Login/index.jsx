@@ -1,39 +1,21 @@
-import  React, {useState, useEffect} from 'react';
+import  React, {useState, useEffect, useContext} from 'react';
 import { KeyboardAvoidingView, TouchableOpacity,TextInput, Text, View, Image, StatusBar, Animated, ToastAndroid} from 'react-native';
 import {styles} from './styles';
 import {MaterialIcons} from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
+import { AuthContext } from '../../contexts/auth';
+
 
 export default function LoginScreen({navigation}) {
+    const {signIn} = useContext(AuthContext);
+
     const [email ,setEmail] = useState(initialState=null);
     const [password ,setPassword] = useState(initialState=null);
     
     async function sendLogin(){
-        let response = await fetch('http://192.168.1.11:3000/login', {
-            method: 'POST',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email,
-                password: password
-              })
-        })
-            let jsonLogin = await response.json().then( data => {
-                console.log(data)
-                if(data ==="Credenciais incorretas"){
-                    ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
-                }else{
-                    // AsyncStorage.setItem('userData', JSON.stringify(jsonLogin))
-                    // let dataStorage = AsyncStorage.getItem('userData')
-                    // console.log(JSON.parse(dataStorage))
-                     navigation.navigate('MainScreen')
-                }
-            })
-
-            
+        signIn(email,password)
+      
     }
     //UseState pra animações
     const [offset, setOffset] = useState(new Animated.ValueXY({x:0, y: 80}))
