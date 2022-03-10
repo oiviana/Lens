@@ -9,9 +9,18 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+let vaga = models.Vaga
+let area = models.Area 
+
+
+ app.get('/readVagas', async (req, res) =>{
+    let readVaga = await vaga.findAll()
+     res.send(readVaga)
+     });
 
 
 
+     
 app.post('/login',async (req, res)=>{
     let response = await estudante.findOne({
         where:{ email: req.body.email, senha: req.body.password }
@@ -24,7 +33,7 @@ app.post('/login',async (req, res)=>{
     }
 });
 
-// let area = models.Area 
+
 
 // app.get('/createArea', async (req, res) =>{
 //     let createArea = await area.create({
