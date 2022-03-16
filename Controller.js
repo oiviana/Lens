@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const models = require('./models');
+const models = require('./src/backend/models');
 let estudante = models.Estudante;
 
 const app = express();
@@ -11,11 +11,18 @@ app.use(bodyParser.json());
 
 let vaga = models.Vaga
 let area = models.Area 
+let empresa = models.Empresa 
 
 
- app.get('/readVagas', async (req, res) =>{
-    let readVaga = await vaga.findAll()
-     res.send(readVaga)
+ app.get('/readVagas', (req, res) =>{
+    vaga.findAll({
+        include: [{
+            model: empresa,
+            attributes:['id','nome','sobre']
+          }]
+  
+    }).then(teste => res.send(teste))
+    .catch(error => console.log(error))
      });
 
 

@@ -11,15 +11,13 @@ export default function LoginScreen({navigation}) {
     const {signIn} = useContext(AuthContext);
 
     const [email ,setEmail] = useState(initialState=null);
-    const [password ,setPassword] = useState(initialState=null);
-    
+    const [password ,setPassword] = useState(initialState=null); 
     async function sendLogin(){
         signIn(email,password)
       
     }
     //UseState pra animações
     const [offset, setOffset] = useState(new Animated.ValueXY({x:0, y: 80}))
-
     //UseEffect que vai realizar a animação quando o componente for renderizado
     useEffect(() => {
         Animated.spring(offset.y, {

@@ -1,18 +1,18 @@
 import React from "react";
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import Perfil  from '../views/Perfil';
+import Notificacoes  from '../../views/Notificacoes';
 
 const Stack = createStackNavigator();
 
-export default function UserNavigator() {
+export default function NotificationNavigator() {
     return(
-    
+
             <Stack.Navigator>
-                <Stack.Screen name="UserNavigator" component={Perfil} options={{
-                     headerShown: false, 
+                <Stack.Screen name="Notificações" component={Notificacoes} options={{
                 }}/>
             </Stack.Navigator>
- 
+   
+        
     );
-}
+}  

@@ -3,7 +3,6 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeNavigator from "./HomeNavigator";
 import NotificationNavigator from "./NotificationNavigator";
 import UserNavigator from "./UserNavigator";
-import LoginScreen from "../views/Login";
 import VacancyNavigator from "./VacancyNavigator";
 import {Entypo, Feather} from '@expo/vector-icons';
 
@@ -22,11 +21,13 @@ export default function Main(){
             },
             tabBarActiveTintColor: 'black',
             tabBarInactiveTintColor: '#616163',
+            tabBarLabel:() => {return null},
+            headerShown:false
         }}
 
         >
             <Tab.Screen 
-            name="Home" 
+            name="HomeTab" 
             component={HomeNavigator}
             options={{
                 tabBarIcon:({size, color}) => (
@@ -36,7 +37,7 @@ export default function Main(){
             />
 
             <Tab.Screen 
-            name="Vagas" 
+            name="VacancyTab" 
             component={VacancyNavigator}
             options={{
                 tabBarIcon:({size, color}) => (
@@ -46,7 +47,7 @@ export default function Main(){
             />
 
             <Tab.Screen 
-            name="Notificações" 
+            name="NotifTab" 
             component={NotificationNavigator}
             options={{
                 tabBarIcon:({size, color}) => (
@@ -55,11 +56,12 @@ export default function Main(){
             }}
             />
 
-            <Tab.Screen name="Perfil"
+            <Tab.Screen name="UserTab"
              component={UserNavigator}
              options={{
                 tabBarIcon:({size, color}) => (
                     <Feather name="user" size={size} color={color}/>
+
                 )
             }}
             />
