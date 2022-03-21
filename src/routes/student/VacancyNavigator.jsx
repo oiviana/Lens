@@ -12,7 +12,7 @@ export default function VacancyNavigator() {
         <Stack.Navigator>
             <Stack.Screen name="Vagas" component={Vagas} options={{
             }} />
-            <Stack.Screen name="AboutVacancy" component={VagaInfo} options={{
+            <Stack.Screen name="Sobre a Vaga" component={VagaInfo} options={{
             }} />
 
         </Stack.Navigator>

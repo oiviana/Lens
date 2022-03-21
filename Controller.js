@@ -6,35 +6,49 @@ let estudante = models.Estudante;
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+//Models
 let vaga = models.Vaga
-let area = models.Area 
-let empresa = models.Empresa 
+let area = models.Area
+let empresa = models.Empresa
 
-
- app.get('/readVagas', (req, res) =>{
+//Select Vagas
+app.get('/readVagas', (req, res) => {
     vaga.findAll({
         include: [{
             model: empresa,
-            attributes:['id','nome','sobre']
-          }]
-  
+            attributes: ['id', 'nome', 'sobre', 'imagem']
+        }]
+
     }).then(teste => res.send(teste))
-    .catch(error => console.log(error))
-     });
+        .catch(error => console.log(error))
+});
+
+//Select vaga by id
+app.get('/aboutVaga/:id', (req, res) => {
+    const id = req.params['id']
+    vaga.findByPk(id, {
+        include: [{
+            model: empresa,
+            attributes: ['id', 'nome', 'sobre', 'imagem']
+        }]
+
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
 
 
 
-     
-app.post('/login',async (req, res)=>{
+//Login Estudante
+app.post('/login', async (req, res) => {
     let response = await estudante.findOne({
-        where:{ email: req.body.email, senha: req.body.password }
+        where: { email: req.body.email, senha: req.body.password }
     });
-    if(response === null){
+    if (response === null) {
         res.send(JSON.stringify('Credenciais incorretas'))
-    }else{
+    } else {
         res.send(response);
         console.log(response)
     }
@@ -67,6 +81,6 @@ app.post('/login',async (req, res)=>{
 
 
 let port = process.env.PORT || 3000;
-app.listen(port, (req, res) =>{
+app.listen(port, (req, res) => {
     console.log("SERVER RODANDO")
 });

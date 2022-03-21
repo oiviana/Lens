@@ -1,12 +1,24 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { ToastAndroid } from 'react-native';
 import api from '../services/api';
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 export const AuthContext = createContext({})
 
 function AuthProvider({ children }) {
 
-    const [userData, setUserData] = useState(initialState = null);
+    const [userData, setUserData] = useState(null);
+
+    useEffect(() => {
+        async function loadStorage(){
+            const user = await AsyncStorage.getItem('@Lens:user')
+            if(user){
+                setUserData(user)
+            } 
+        } 
+        loadStorage()
+      }, [])
+
+
     async function signIn(email, password) {
         const response = await api.post('/login', {
             email: email,
@@ -18,15 +30,20 @@ function AuthProvider({ children }) {
             return
         }
         else {
-
+      
             setUserData(response.data)
-            ToastAndroid.show(JSON.stringify(userData), ToastAndroid.LONG)
+            await AsyncStorage.setItem('@Lens:user', response.data)
         }
+    }
+
+    async function signOut(){
+        setUserData(null)
+        await AsyncStorage.removeItem('@Lens:user');
     }
 
 
     return (
-        <AuthContext.Provider value={{ nome: "OIOIOI", signIn, userData }}>
+        <AuthContext.Provider value={{ nome: "OIOIOI", signIn, signOut, userData }}>
             {children}
         </AuthContext.Provider>
     )

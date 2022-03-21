@@ -1,22 +1,35 @@
-import { React } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, ScrollView, Image, View } from 'react-native';
 import {styles} from './styles';
 import { Divider } from 'react-native-elements';
+import api from '../../services/api';
 
-export default function VagaInfo() {
+export default function VagaInfo({route}) {
+    const idvaga = route.params.vagaid
+    const [vagainfo, setVagainfo] = useState([{}]);
+    useEffect(() => {
+        api.get(`aboutVaga/${idvaga}`).then(response => {
+          setVagainfo(response.data)
+        }).catch(error =>console.log("Texto depois"+error) )
+        
+      }, [])
+
+
+
+
     return(
         <ScrollView style={styles.container}>
             <View style={styles.headerVaga}>
             <Image
              style={styles.companyImage}
-             source={require('../../assets/img/testes/logo_fatec.png')}
+             source={require('../../assets/img/testes/empresas/logo_fatec.png')}
              />
-             <Text style={styles.vacancyTitle}>Desenvolvedor Front-end</Text>
+             <Text style={styles.vacancyTitle}>{vagainfo.titulo}</Text>
             </View>
             <View style={styles.dadosVaga}>
-             <Text style={{fontWeight:'bold',fontSize:17,paddingBottom:3}}>Corebiz - Marketing e Perfomance</Text>
-             <Text style={styles.dadoVaga}>Período: Manhã</Text>
-             <Text style={styles.dadoVaga}>Anunciada em 01/02/2022</Text>
+             <Text style={{fontWeight:'bold',fontSize:17,paddingBottom:3}}>{vagainfo.Empresa?.nome}</Text>
+             <Text style={styles.dadoVaga}>Período: {vagainfo.periodo}</Text>
+             <Text style={styles.dadoVaga}>Anunciada em {vagainfo?.data?.split('-').reverse().join('/')}</Text>
              <Text style={styles.dadoVaga}>30 Candidaturas</Text>
             </View>
             
@@ -25,7 +38,7 @@ export default function VagaInfo() {
             <View>
                 <Text style={styles.title}>Sobre a vaga</Text>
                 <Text style={styles.descriptionContent}>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                    {vagainfo.descricao}
                 </Text>
             </View>
 
@@ -35,7 +48,7 @@ export default function VagaInfo() {
             <View>
                 <Text style={styles.title}>Sobre a Empresa</Text>
                 <Text style={styles.descriptionContent}>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. 
+                {vagainfo.Empresa?.sobre}
                 </Text>
             </View>
             <Divider width={3} color='#DCDCDC'/>

@@ -2,21 +2,27 @@ import React from "react";
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginNavigator from './LoginNavigator';
 import Main from './student/Main';
+import { useAuth } from "../hooks/useAuth";
+import { View } from "react-native-web";
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
-    return (
+    const {userData} = useAuth()
+    if(userData){
+        return (
+            <Stack.Navigator>
+                <Stack.Screen name="Main" component={Main} options={{
+                    headerShown: false
+                }} />
+            </Stack.Navigator>
+    
+    
+        );
+        
+    }
+    return(
+        <LoginNavigator/>
+    )
 
-        <Stack.Navigator>
-            <Stack.Screen name="Main" component={Main} options={{
-                headerShown: false
-            }} />
-            <Stack.Screen name="LoginScreen" component={LoginNavigator} options={{
-                headerShown: false
-            }} />
-        </Stack.Navigator>
-
-
-    );
 }
