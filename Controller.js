@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const models = require('./src/backend/models');
-let estudante = models.Estudante;
+
 
 const app = express();
 app.use(cors());
@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //Models
+let estudante = models.Estudante;
 let vaga = models.Vaga
 let area = models.Area
 let empresa = models.Empresa

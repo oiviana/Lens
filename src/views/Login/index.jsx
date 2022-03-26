@@ -1,82 +1,120 @@
-import  React, {useState, useEffect, useContext} from 'react';
-import { KeyboardAvoidingView, TouchableOpacity,TextInput, Text, View, Image, StatusBar, Animated, ToastAndroid} from 'react-native';
-import {styles} from './styles';
-import {MaterialIcons} from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { KeyboardAvoidingView, TouchableOpacity, TextInput, Text, View, Image, StatusBar, Animated } from 'react-native';
+import { styles } from './styles';
+import { MaterialIcons } from '@expo/vector-icons';
+import { Modalize } from 'react-native-modalize'
+
 
 import { AuthContext } from '../../contexts/auth';
 
 
-export default function LoginScreen({navigation}) {
-    const {signIn} = useContext(AuthContext);
+export default function LoginScreen({ navigation }) {
+    const modalizeRef = useRef(null);
+    function onOpen(){
+        modalizeRef.current?.open();
+    }
 
-    const [email ,setEmail] = useState(initialState=null);
-    const [password ,setPassword] = useState(initialState=null); 
-    async function sendLogin(){
-        signIn(email,password)
-      
+    const { signIn } = useContext(AuthContext);
+
+    const [email, setEmail] = useState(initialState = null);
+    const [password, setPassword] = useState(initialState = null);
+    async function sendLogin() {
+        signIn(email, password)
+
     }
     //UseState pra animações
-    const [offset, setOffset] = useState(new Animated.ValueXY({x:0, y: 80}))
+    const [offset, setOffset] = useState(new Animated.ValueXY({ x: 0, y: 80 }))
     //UseEffect que vai realizar a animação quando o componente for renderizado
     useEffect(() => {
         Animated.spring(offset.y, {
-            toValue:0,
-            speed:3,
-            useNativeDriver:true
+            toValue: 0,
+            speed: 3,
+            useNativeDriver: true
         }).start();
     }, []);
 
-    return(
+    return (
         <KeyboardAvoidingView style={styles.container}>
-            <StatusBar backgroundColor={'#5155b4'}/>
+            <StatusBar backgroundColor={'#5155b4'} />
             <View style={styles.containerLogo}>
                 <Image
-                source={require("../../assets/img/icons/icon_v1.png")}
-                style={styles.logo}
+                    source={require("../../assets/img/icons/icon_v1.png")}
+                    style={styles.logo}
                 />
                 <Text style={styles.titleLogo}>Lens - Estágios</Text>
             </View>
             <Animated.View style={[styles.containerForm,
             {
-                transform:[
-                    {translateY: offset.y }
+                transform: [
+                    { translateY: offset.y }
                 ]
             }
             ]}>
                 <Text style={styles.helloText}>Acesse e encontre seu primeiro emprego!</Text>
                 <TextInput
-                style={styles.input}
-                placeholder='Email'
-                autoCorrect={false}
-                selectionColor={'#5155b4'}
-                onChangeText={(text) => {setEmail(text)}}
+                    style={styles.input}
+                    placeholder='Email'
+                    autoCorrect={false}
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setEmail(text) }}
                 />
                 <TextInput
-                style={styles.input}
-                placeholder='Senha'
-                autoCorrect={false}
-                secureTextEntry
-                selectionColor={'#5155b4'}
-                onChangeText={(text) => {setPassword(text)}}
+                    style={styles.input}
+                    placeholder='Senha'
+                    autoCorrect={false}
+                    secureTextEntry
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setPassword(text) }}
                 />
                 <TouchableOpacity style={styles.loginButton}
-                onPress={()=>{sendLogin()}}>
-                    <Text  style={styles.textButton}>Acessar</Text>
+                    onPress={() => { sendLogin() }}>
+                    <Text style={styles.textButton}>Acessar</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                style={styles.signUpButton}
-                onPress={() => navigation.navigate('Cadastro')}>
+                    style={styles.signUpButton}
+                    onPress={() => navigation.navigate('Cadastro')}>
                     <Text>Cadastre-se</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.companyButton}>
-                    <MaterialIcons name='domain' size={18}/>
+                <TouchableOpacity style={styles.companyButton} onPress={onOpen}>
+                    <MaterialIcons name='domain' size={18} />
                     <Text style={styles.companyLink}>Acessar como empresa</Text>
                 </TouchableOpacity>
 
-            </Animated.View>     
+            </Animated.View>
+
+            <Modalize
+                ref={modalizeRef}
+                snapPoint={485}
+            >
+                <KeyboardAvoidingView style={styles.containerFormModal}>
+                    <Text style={ styles.helloTextModal}>Acesse e Encontre seu Estagiário!</Text>
+
+                    <TextInput
+                    style={styles.input}
+                    placeholder='Email'
+                    autoCorrect={false}
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setEmail(text) }}
+                />
+                <TextInput
+                    style={styles.input}
+                    placeholder='Senha'
+                    autoCorrect={false}
+                    secureTextEntry
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setPassword(text) }}
+                />
+
+                    <TouchableOpacity style={styles.loginButtonCompany}
+                    onPress={() => {}}>
+                    <Text style={styles.textButton}>Acessar</Text>
+                </TouchableOpacity>
+
+                </KeyboardAvoidingView>
+            </Modalize>
+
         </KeyboardAvoidingView>
 
     );

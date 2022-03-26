@@ -2,9 +2,11 @@ import { React } from 'react';
 import { Text, View, ScrollView, Image, } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles'
-import { Entypo, Feather } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { useAuth } from "../../hooks/useAuth";
 
 export default function Perfil() {
+    const {userData} = useAuth()
     return (
         <ScrollView>
             <View style={styles.containerAboutUser}>
@@ -13,7 +15,7 @@ export default function Perfil() {
                     source={require('../../assets/img/testes/freitas.png')}
                 />
                 <View style={styles.userContent}>
-                    <Text style={styles.userName}>Lucas Viana</Text>
+                    <Text style={styles.userName}>{userData.nome} {userData.sobrenome}</Text>
                     <Text style={styles.userCourse}>Análise de Sistemas</Text>
                     <Text style={styles.userUniversity}>FATEC Faculdade de Tecnologia de Bragança Paulista</Text>
                     <View style={styles.userLocationGrid}>

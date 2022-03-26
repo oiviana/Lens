@@ -43,6 +43,13 @@ const styles = StyleSheet.create({
         borderTopLeftRadius:60,
         borderTopRightRadius:60
     },
+    containerFormModal:{
+        width:'100%',
+        alignItems:'center',
+        justifyContent:'space-between',
+        paddingTop:60
+      
+    },
     input:{
         borderBottomWidth:1.5,
         borderBottomColor:'#7a81de',
@@ -68,11 +75,34 @@ shadowRadius: 7.49,
 
 elevation: 12,
     },
+    loginButtonCompany:{
+        backgroundColor:'#5155b4',
+        marginTop:40,
+        padding:18,
+        borderRadius:6,
+        width:325,
+        alignItems:'center',
+        justifyContent:'center',
+        shadowColor: "#000",
+shadowOffset: {
+	width: 0,
+	height: 6,
+},
+shadowOpacity: 0.37,
+shadowRadius: 7.49,
+
+elevation: 12,
+    },
     textButton:{
         color:'white',
         fontSize:18  
     },
     helloText:{
+        fontSize:18,
+        marginBottom:30
+    },
+    helloTextModal:{
+        marginTop:0,
         fontSize:18,
         marginBottom:30
     },

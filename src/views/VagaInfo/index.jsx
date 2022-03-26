@@ -10,7 +10,7 @@ export default function VagaInfo({route}) {
     useEffect(() => {
         api.get(`aboutVaga/${idvaga}`).then(response => {
           setVagainfo(response.data)
-        }).catch(error =>console.log("Texto depois"+error) )
+        }).catch(error =>console.log("Erro: "+error) )
         
       }, [])
 

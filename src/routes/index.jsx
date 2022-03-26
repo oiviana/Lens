@@ -3,7 +3,6 @@ import { createStackNavigator } from '@react-navigation/stack';
 import LoginNavigator from './LoginNavigator';
 import Main from './student/Main';
 import { useAuth } from "../hooks/useAuth";
-import { View } from "react-native-web";
 
 const Stack = createStackNavigator();
 
