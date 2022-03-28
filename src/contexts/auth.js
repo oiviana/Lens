@@ -7,7 +7,7 @@ export const AuthContext = createContext({})
 function AuthProvider({ children }) {
 
     const [userData, setUserData] = useState(null);
-    const [company, setCompany] = useState(false);
+    const [company, setCompany] = useState(true);
 
     useEffect(() => {
         async function loadStorage(){
@@ -31,7 +31,7 @@ function AuthProvider({ children }) {
             return
         }
         else {
-      
+            setCompany(false)
             setUserData(response.data)
             await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
         }
@@ -49,8 +49,9 @@ function AuthProvider({ children }) {
         else {
       
             setUserData(response.data)
-            await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
             setCompany(true)
+            await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
+            
         }
     }
 

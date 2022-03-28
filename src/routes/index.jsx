@@ -9,6 +9,7 @@ const Stack = createStackNavigator();
 
 export default function Routes() {
     const { userData, company } = useAuth()
+
     if (userData && company) {
         return (
             <Stack.Navigator>

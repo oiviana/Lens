@@ -12,7 +12,7 @@ export default function Home() {
         <View style={styles.container}>
             <StatusBar backgroundColor={'white'} barStyle='dark-content' />
            <Text>
-           Nome no contexto: {userData.nome}
+           ÁREA DE ESTUDANTE: {userData.nome}
                </Text> 
                <TouchableOpacity onPress={() => signOut()} style={{
                    backgroundColor:'pink',

@@ -1,12 +1,20 @@
-import { React } from 'react';
+import React, {useEffect, useState}  from 'react';
 import { Text, View, ScrollView, Image, } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles'
 import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "../../hooks/useAuth";
+import api from '../../services/api';
 
 export default function Perfil() {
     const {userData} = useAuth()
+    const [studentdata, setStudentdata] = useState([{}]);
+    useEffect(() => {
+        api.get(`studentprofile/${userData.id}`).then(response => {
+          setStudentdata(response.data)
+        }).catch(error =>console.log("Erro: "+error) )
+        
+      }, [])
     return (
         <ScrollView>
             <View style={styles.containerAboutUser}>
@@ -15,7 +23,7 @@ export default function Perfil() {
                     source={require('../../assets/img/testes/freitas.png')}
                 />
                 <View style={styles.userContent}>
-                    <Text style={styles.userName}>{userData.nome} {userData.sobrenome}</Text>
+                    <Text style={styles.userName}>{studentdata.nome} {studentdata.sobrenome}</Text>
                     <Text style={styles.userCourse}>Análise de Sistemas</Text>
                     <Text style={styles.userUniversity}>FATEC Faculdade de Tecnologia de Bragança Paulista</Text>
                     <View style={styles.userLocationGrid}>
@@ -33,7 +41,7 @@ export default function Perfil() {
             <View style={styles.containerDescription}>
                 <Text style={styles.title}>Sobre mim</Text>
                 <Text style={styles.descriptionContent}>
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+                {studentdata.sobre}
                 </Text>
 
             </View>

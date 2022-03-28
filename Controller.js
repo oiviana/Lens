@@ -41,6 +41,13 @@ app.get('/aboutVaga/:id', (req, res) => {
 });
 
 
+app.get('/studentprofile/:id', (req, res) => {
+    const id = req.params['id']
+    estudante.findByPk(id).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+
 
 //Login Estudante
 app.post('/login', async (req, res) => {

@@ -1,9 +1,7 @@
 import React from "react";
-import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Login from '../views/Login';
 import Cadastro from '../views/Cadastro'
-import Main from '../routes/student/Main';
 
 const Stack = createStackNavigator();
 
