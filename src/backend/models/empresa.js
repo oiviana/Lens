@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Empresa.belongsTo(models.Area)
-      Empresa.belongsTo(models.Endereco_empresa)
       Empresa.hasMany(models.Vaga)
     }
   };

@@ -55,6 +55,18 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.post('/logincompany', async (req, res) => {
+    let response = await empresa.findOne({
+        where: { email: req.body.email, senha: req.body.password }
+    });
+    if (response === null) {
+        res.send(JSON.stringify('Credenciais incorretas'))
+    } else {
+        res.send(response);
+        console.log(response)
+    }
+});
+
 
 
 // app.get('/createArea', async (req, res) =>{

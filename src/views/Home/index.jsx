@@ -2,9 +2,10 @@ import React, {useContext}  from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import {styles} from './styles'
 import { useAuth } from "../../hooks/useAuth";
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function Home() {
-    const {userData} = useAuth()
+    const {userData, signOut} = useAuth()
 
     return(
         
@@ -13,6 +14,15 @@ export default function Home() {
            <Text>
            Nome no contexto: {userData.nome}
                </Text> 
+               <TouchableOpacity onPress={() => signOut()} style={{
+                   backgroundColor:'pink',
+                   width:100,
+                   padding:30,
+                   alignContent:'center',
+                   marginLeft:100
+               }}>
+                   <Text>Sair</Text>
+               </TouchableOpacity>
         </View>
 
     );

@@ -7,6 +7,7 @@ export const AuthContext = createContext({})
 function AuthProvider({ children }) {
 
     const [userData, setUserData] = useState(null);
+    const [company, setCompany] = useState(false);
 
     useEffect(() => {
         async function loadStorage(){
@@ -32,18 +33,36 @@ function AuthProvider({ children }) {
         else {
       
             setUserData(response.data)
-            await AsyncStorage.setItem('@Lens:user', response.data)
+            await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
+        }
+    }
+    async function signInCompany(email, password) {
+        const response = await api.post('/loginCompany', {
+            email: email,
+            password: password
+        })
+        console.log(response.data)
+        if (response.data === "Credenciais incorretas") {
+            ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
+            return
+        }
+        else {
+      
+            setUserData(response.data)
+            await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
+            setCompany(true)
         }
     }
 
     async function signOut(){
         setUserData(null)
         await AsyncStorage.removeItem('@Lens:user');
+        setCompany(false)
     }
 
 
     return (
-        <AuthContext.Provider value={{ nome: "OIOIOI", signIn, signOut, userData }}>
+        <AuthContext.Provider value={{ nome: "OIOIOI", signIn, signInCompany, signOut, userData, company }}>
             {children}
         </AuthContext.Provider>
     )

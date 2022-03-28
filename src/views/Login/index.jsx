@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { KeyboardAvoidingView, TouchableOpacity, TextInput, Text, View, Image, StatusBar, Animated } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, TextInput, Text, View, Image, StatusBar, Animated,ToastAndroid } from 'react-native';
 import { styles } from './styles';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize'
@@ -14,14 +14,20 @@ export default function LoginScreen({ navigation }) {
         modalizeRef.current?.open();
     }
 
-    const { signIn } = useContext(AuthContext);
+    const { signIn, signInCompany } = useContext(AuthContext);
 
     const [email, setEmail] = useState(initialState = null);
     const [password, setPassword] = useState(initialState = null);
-    async function sendLogin() {
+    async function Login() {
         signIn(email, password)
 
     }
+
+    async function LoginCompany() {
+        signInCompany(email, password)
+
+    }
+
     //UseState pra animações
     const [offset, setOffset] = useState(new Animated.ValueXY({ x: 0, y: 80 }))
     //UseEffect que vai realizar a animação quando o componente for renderizado
@@ -67,7 +73,7 @@ export default function LoginScreen({ navigation }) {
                     onChangeText={(text) => { setPassword(text) }}
                 />
                 <TouchableOpacity style={styles.loginButton}
-                    onPress={() => { sendLogin() }}>
+                    onPress={() => { Login() }}>
                     <Text style={styles.textButton}>Acessar</Text>
                 </TouchableOpacity>
 
@@ -108,7 +114,7 @@ export default function LoginScreen({ navigation }) {
                 />
 
                     <TouchableOpacity style={styles.loginButtonCompany}
-                    onPress={() => {}}>
+                    onPress={() => { LoginCompany()}}>
                     <Text style={styles.textButton}>Acessar</Text>
                 </TouchableOpacity>
 
