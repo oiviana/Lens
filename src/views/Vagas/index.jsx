@@ -10,6 +10,7 @@ export default function Vagas({ navigation }) {
   useEffect(() => {
     api.get('/readVagas').then(response => {
       setVagas(response.data)
+      console.log(response.data)
     }).catch(error =>console.log("Texto depois"+error) )
     
   }, [])
@@ -21,7 +22,7 @@ export default function Vagas({ navigation }) {
         <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('Sobre a Vaga',{vagaid: item.id})}>
           <Image
             style={styles.companyImage}
-            source={require('../../assets/img/testes/empresas/logo_fatec.png')}
+            source={{ uri: 'http://localhost:3000/img/empresa/logo_fatec.png',}}
           />
           <View style={styles.vacancyContent}>
             <Text style={styles.vacancyTitle}>{item.titulo}</Text>

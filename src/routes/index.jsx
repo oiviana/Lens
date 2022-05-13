@@ -10,7 +10,7 @@ const Stack = createStackNavigator();
 export default function Routes() {
     const { userData, company } = useAuth()
 
-    if (userData && company) {
+    if (userData && company) { 
         return (
             <Stack.Navigator>
                 <Stack.Screen name="CompanyMain" component={CompanyMain} options={{

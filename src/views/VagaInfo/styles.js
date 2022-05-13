@@ -2,7 +2,8 @@ import {StyleSheet} from 'react-native';
 
 const styles = StyleSheet.create({
     container:{
-        padding:10
+        padding:10,
+        paddingBottom:10
     },
     headerVaga:{
         flexDirection:'row'
@@ -39,6 +40,30 @@ const styles = StyleSheet.create({
         textAlign:'justify',
         padding:5,
         marginBottom:10
-    }   
+    }   ,
+    candidaturaButton:{
+        alignSelf:'center',
+        backgroundColor:'#79ed98',
+        marginTop:40,
+        padding:15,
+        borderRadius:3,
+        width:300,
+        alignItems:'center',
+        justifyContent:'center',
+    },
+    textButton:{
+        color:'white',
+        fontSize:18  
+    },
+    candidatoButton:{
+        alignSelf:'center',
+        backgroundColor:'#c2b4fa',
+        marginTop:40,
+        padding:15,
+        borderRadius:3,
+        width:300,
+        alignItems:'center',
+        justifyContent:'center',
+    },
 });
 export{styles}

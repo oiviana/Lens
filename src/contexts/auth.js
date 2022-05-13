@@ -10,15 +10,43 @@ function AuthProvider({ children }) {
     const [company, setCompany] = useState(true);
 
     useEffect(() => {
-        async function loadStorage(){
+        async function loadStorage() {
             const user = await AsyncStorage.getItem('@Lens:user')
-            if(user){
+            if (user) {
                 setUserData(user)
-            } 
-        } 
+            }
+        }
         loadStorage()
-      }, [])
+    }, [])
 
+
+    async function signUp(nome, sobrenome, rg, cpf, email, password, password2) {
+        if (password == password2) {
+            console.log("passou aqui")
+            const response = await api.post('/createEstudante', {
+                nome: nome,
+                sobrenome: sobrenome,
+                rg: rg,
+                cpf: cpf,
+                email: email,
+                password: password
+            })
+            console.log("passou aqui 2")
+            console.log(response.data)
+            if (response.data === "erro") {
+                ToastAndroid.show("Ocorreu um erro", ToastAndroid.LONG)
+            }
+            else {
+                setCompany(false)
+                setUserData(response.data)
+                await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
+
+            }
+        } else {
+            ToastAndroid.show("As senhas não correspondem", ToastAndroid.LONG)
+
+        }
+    }
 
     async function signIn(email, password) {
         const response = await api.post('/login', {
@@ -47,15 +75,15 @@ function AuthProvider({ children }) {
             return
         }
         else {
-      
+
             setUserData(response.data)
             setCompany(true)
             await AsyncStorage.setItem('@Lens:user', JSON.stringify(response.data))
-            
+
         }
     }
 
-    async function signOut(){
+    async function signOut() {
         setUserData(null)
         await AsyncStorage.removeItem('@Lens:user');
         setCompany(false)
@@ -63,7 +91,7 @@ function AuthProvider({ children }) {
 
 
     return (
-        <AuthContext.Provider value={{ nome: "OIOIOI", signIn, signInCompany, signOut, userData, company }}>
+        <AuthContext.Provider value={{ nome: "OIOIOI", signUp, signIn, signInCompany, signOut, userData, company }}>
             {children}
         </AuthContext.Provider>
     )

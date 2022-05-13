@@ -8,12 +8,29 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static('public'))
 
 //Models
 let estudante = models.Estudante;
+let enderecoestudante = models.Endereco_estudante;
+let formacao = models.Formacao;
+let instformacao = models.Instformacao;
 let vaga = models.Vaga
+let candidatura = models.Candidatura
 let area = models.Area
 let empresa = models.Empresa
+
+//AREA
+
+app.get('/readAreas', (req, res) => {
+    area.findAll({}).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+//AREA
+
+
+//VAGAS
 
 //Select Vagas
 app.get('/readVagas', (req, res) => {
@@ -40,14 +57,84 @@ app.get('/aboutVaga/:id', (req, res) => {
         .catch(error => console.log(error))
 });
 
+//VAGAS
 
-app.get('/studentprofile/:id', (req, res) => {
-    const id = req.params['id']
-    estudante.findByPk(id).then(teste => res.send(teste))
+
+//CANDIDATURAS
+
+app.post('/createCandidatura', async (req, res) => {
+    let createCandidatura = await candidatura.create({
+        status: "Candidato",
+        estudanteId: req.body.estudanteId,
+        vagaId: req.body.vagaId,
+        createAt: new Date(),
+        updatedAt: new Date()
+    });
+    res.send('Candidatura realizada')
+});
+
+app.get('/readCandidatura', (req, res) => {
+    candidatura.findOne({
+        where: { vagaId: 4},
+        
+        include: [{
+            model: estudante,
+            attributes: ['id', 'nome']
+        },
+        {
+            model: vaga,
+            attributes: ['id', 'titulo']
+        }
+    ]
+    }).then(teste => res.send(teste))
         .catch(error => console.log(error))
 });
 
+app.get('/checkCandidatura/:estId&:vagaId', (req, res) => {
+    const estId = req.params['estId']
+    const vagId = req.params['vagaId']
+    candidatura.findOne({
+        where: { estudanteId:estId, vagaId:vagId }
 
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+//CANDIDATURAS
+
+
+
+//ESTUDANTE
+
+app.post('/createEstudante', async (req, res) => {
+    let createEstudante = await estudante.create({
+        nome: req.body.nome,
+        sobrenome: req.body.sobrenome,
+        email: req.body.email,
+        senha: req.body.password,
+        RG: req.body.rg,
+        CPF: req.body.cpf,
+        createAt: new Date(),
+        updatedAt: new Date()
+    });
+    if (createEstudante != null) {
+        res.send(createEstudante)
+        console.log(createEstudante)
+    } else {
+        res.send("erro")
+    }
+
+});
+
+app.get('/studentprofile/:id', (req, res) => {
+    const id = req.params['id']
+    estudante.findByPk(id,{
+        include: [{
+            model: area,
+            attributes: ['nome_area']
+        }]
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
 
 //Login Estudante
 app.post('/login', async (req, res) => {
@@ -61,7 +148,39 @@ app.post('/login', async (req, res) => {
         console.log(response)
     }
 });
+// ESTUDANTE
 
+// ENDEREÇO ESTUDANTE
+app.get('/studentender/:id', (req, res) => {
+    const id = req.params['id']
+    enderecoestudante.findOne({
+        where: { estudanteId: id}
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+
+// ENDEREÇO ESTUDANTE
+
+// FORMAÇÕES
+
+app.get('/readFormacao/:id', (req, res) => {
+    const id = req.params['id']
+    formacao.findAll({
+        where: { estudanteId: id}, 
+        include: [{
+            model: instformacao,
+            attributes: ['id', 'nome','imagem']
+        }
+    ]
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+
+// FORMAÇÕES
+
+//EMPRESA
 app.post('/logincompany', async (req, res) => {
     let response = await empresa.findOne({
         where: { email: req.body.email, senha: req.body.password }
