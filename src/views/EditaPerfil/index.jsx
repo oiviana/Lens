@@ -37,11 +37,11 @@ export default function EditaPerfil() {
         }
     }
     return (
-        <ScrollView>
+        <View style={{flex:1, backgroundColor:"gray"}}>
             <TouchableOpacity onPress={() => pickImage()}>
-                <Text>Selecionar Imagem</Text>
+                <Text style={{color:"white"}}>Selecionar Imagem</Text>
             </TouchableOpacity>
-            {img && <Image source={{uri: img}} style={{flex:1/2}}/>}
-        </ScrollView>
+            {img && <Image source={{uri: img}} style={{width:110,height:110}}/>}
+        </View>
     );
 }

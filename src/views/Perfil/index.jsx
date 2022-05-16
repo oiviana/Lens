@@ -18,7 +18,6 @@ export default function Perfil() {
 
         api.get(`readFormacao/${userData.id}`).then(response => {
             setFormationdata(response.data)
-            console.log(formationdata)
         }).catch(error => console.log("Erro: " + error))
 
         api.get(`studentender/${userData.id}`).then(response => {
@@ -53,7 +52,7 @@ export default function Perfil() {
             <View style={styles.containerAboutUser}>
                 <Image
                     style={styles.profileImage}
-                    source={require('../../assets/img/testes/freitas.png')}
+                    source={{uri:JSON.stringify(studentdata.imagem)}}
                 />
                 <View style={styles.userContent}>
                     <Text style={styles.userName}>{studentdata.nome} {studentdata.sobrenome}</Text>

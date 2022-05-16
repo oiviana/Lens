@@ -113,6 +113,7 @@ app.post('/createEstudante', async (req, res) => {
         senha: req.body.password,
         RG: req.body.rg,
         CPF: req.body.cpf,
+        imagem:'http://localhost:3000/img/user.png',
         createAt: new Date(),
         updatedAt: new Date()
     });
