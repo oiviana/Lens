@@ -4,6 +4,7 @@ const styles = StyleSheet.create({
     container:{
         padding:10,
         paddingBottom:10
+              
     },
     headerVaga:{
         flexDirection:'row'
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
         borderRadius:3,
         width:300,
         alignItems:'center',
-        justifyContent:'center',
+        justifyContent:'center'
     },
 });
 export{styles}

@@ -25,7 +25,7 @@ export default function VagaInfo({ route }) {
             }
         }).catch(error => console.log("Erro: " + error))
 
-    }, [])
+    }, [buttonCand])
 
     async function Candidatura() {
         const response = await api.post('/createCandidatura', {
@@ -37,6 +37,8 @@ export default function VagaInfo({ route }) {
             ToastAndroid.show("Ocorreu um erro", ToastAndroid.LONG)
         }
         else {
+            ToastAndroid.show("Agora você é um candidato!", ToastAndroid.LONG)
+            setbuttonCand(true)
 
         }
 
@@ -47,7 +49,7 @@ export default function VagaInfo({ route }) {
             <View style={styles.headerVaga}>
                 <Image
                     style={styles.companyImage}
-                    source={require('../../assets/img/testes/empresas/logo_fatec.png')}
+                    source={{ uri: `http://192.168.1.10:3000/img/empresa/${vagainfo.Empresa?.imagem}`,}}
                 />
                 <Text style={styles.vacancyTitle}>{vagainfo.titulo}</Text>
             </View>

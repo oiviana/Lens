@@ -9,6 +9,7 @@ import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 
 export default function Home() {
+  const { signOut } = useAuth()
   const [avatar, setAvatar] = useState();
 
   async function imagePickerCall() {
@@ -33,6 +34,7 @@ export default function Home() {
     return;
   }
   setAvatar(data)
+  console.log(data.uri)
   }
 
   async function uploadImage() {
@@ -42,8 +44,7 @@ export default function Home() {
       uri: avatar.uri,
       type: avatar.type
     });
-    await axios.post('http://localhost:3000/img', data);
-
+    await axios.post('http://192.168.1.10:3000/public/', data).catch(error => console.log("Erro: " + error))
   }
 
   return (
@@ -62,6 +63,7 @@ export default function Home() {
       }}>
         <Text>Sair</Text>
       </TouchableOpacity>
+      <TouchableOpacity onPress={imagePickerCall}>
       <Image
         source={{
           uri: avatar
@@ -70,17 +72,8 @@ export default function Home() {
         }}
         style={{ width: 100, height: 100 }}
       />
-      <TouchableOpacity onPress={imagePickerCall} style={{
-        backgroundColor: 'red',
-        width: 100,
-        padding: 30,
-        alignContent: 'center',
-        marginLeft: 100,
-        marginBottom: 20
-      }}>
-        <Text>Escolher Imagem</Text>
       </TouchableOpacity>
-
+    
       <TouchableOpacity onPress={uploadImage} style={{
         backgroundColor: 'red',
         width: 100,

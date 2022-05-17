@@ -7,7 +7,7 @@ import { useAuth } from "../../hooks/useAuth";
 import api from '../../services/api';
 
 export default function Perfil() {
-    const { userData } = useAuth()
+    const { userData } = useAuth();
     const [studentdata, setStudentdata] = useState([{}]);
     const [formationdata, setFormationdata] = useState([{}]);
     const [adress, setAdress] = useState([{}]);
@@ -32,7 +32,7 @@ export default function Perfil() {
                 <View style={styles.content}>
                     <Image
                         style={styles.institutionImage}
-                        source={require('../../assets/img/testes/empresas/logo_fatec.png')}
+                        
                     />
                     <View style={styles.formationContent}>
                         <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
@@ -52,7 +52,7 @@ export default function Perfil() {
             <View style={styles.containerAboutUser}>
                 <Image
                     style={styles.profileImage}
-                    source={{uri:JSON.stringify(studentdata.imagem)}}
+                    source={{uri: `http://192.168.1.10:3000/img/estudante/${studentdata.imagem}`,}}
                 />
                 <View style={styles.userContent}>
                     <Text style={styles.userName}>{studentdata.nome} {studentdata.sobrenome}</Text>

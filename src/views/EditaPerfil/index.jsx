@@ -1,47 +1,84 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
+import { Text, View, ScrollView, Image, TouchableOpacity,TextInput } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles'
 import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "../../hooks/useAuth";
 import api from '../../services/api';
+import axios from 'axios';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions'
+import * as ImagePicker from 'expo-image-picker'
 
 export default function EditaPerfil() {
-
-    const [galleryPermission, setGalleryPermission] = useState(null);
-    const [img, setImg] = useState(null);
-
+    const [nome, setNome] = useState();
+    const { userData } = useAuth();
+    const [avatar, setAvatar] = useState();
+    const [studentdata, setStudentdata] = useState([{}]);
 
     useEffect(() => {
-        (async () => {
-            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            setGalleryPermission(galleryStatus.status === 'granted');
-        })();
-    }, []);
+        api.get(`studentprofile/${userData.id}`).then(response => {
+            setStudentdata(response.data)
+        }).catch(error => console.log("Erro: " + error))
 
-    const pickImage = async () =>{
-        let result = await ImagePicker.launchImageLibraryAsync({
+
+    }, [])
+
+    async function imagePickerCall() {
+        if (Constants.platform.ios) {
+            const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+            if (status !== 'granted') {
+                alert("Necessidade de PErmissão");
+                return;
+            }
+        }
+
+        const data = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing:true,
-            aspect:[4,3],
-            quality:1,
+            allowsEditing: true
         })
-        console.log(result);
 
-        if(!result.cancelled){
-            setImg(result.uri)
+        if (data.cancelled) {
+            return;
         }
-        else if(galleryPermission === false){
-            return <Text>Sem acesso aos Arquivos</Text>
+        if (!data.uri) {
+            return;
         }
+        setAvatar(data)
+        console.log(data.uri)
     }
+
+
+
+
     return (
-        <View style={{flex:1, backgroundColor:"gray"}}>
-            <TouchableOpacity onPress={() => pickImage()}>
-                <Text style={{color:"white"}}>Selecionar Imagem</Text>
-            </TouchableOpacity>
-            {img && <Image source={{uri: img}} style={{width:110,height:110}}/>}
-        </View>
+        <ScrollView>
+            <View style={styles.editImgContainer}>
+                <TouchableOpacity onPress={imagePickerCall}>
+                    <Image
+                        source={{
+                            uri: avatar
+                                ? avatar.uri
+                                :`http://192.168.1.10:3000/img/estudante/${studentdata.imagem}`
+                        }}
+                        style={styles.imgEdit}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text>Atualizar Imagem</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View>
+            <TextInput
+                    style={styles.input}
+                    autoCorrect={false}
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setNome(text) }}
+                    value={studentdata.nome}
+                />
+            </View>
+        </ScrollView>
     );
 }

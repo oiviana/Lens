@@ -7,7 +7,7 @@ export const AuthContext = createContext({})
 function AuthProvider({ children }) {
 
     const [userData, setUserData] = useState(null);
-    const [company, setCompany] = useState(true);
+    const [company, setCompany] = useState();
 
     useEffect(() => {
         async function loadStorage() {
