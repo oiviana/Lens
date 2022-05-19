@@ -16,13 +16,17 @@ export default function EditaPerfil() {
     const [avatar, setAvatar] = useState();
     const [studentdata, setStudentdata] = useState([{}]);
 
+
     useEffect(() => {
         api.get(`studentprofile/${userData.id}`).then(response => {
             setStudentdata(response.data)
         }).catch(error => console.log("Erro: " + error))
 
+        setNome(JSON.stringify(studentdata.nome))
+        console.log(nome)
 
     }, [])
+
 
     async function imagePickerCall() {
         if (Constants.platform.ios) {
@@ -77,6 +81,7 @@ export default function EditaPerfil() {
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setNome(text) }}
                     value={studentdata.nome}
+
                 />
             </View>
         </ScrollView>

@@ -2,7 +2,20 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const models = require('./src/backend/models');
+const req = require('express/lib/request');
 
+const path = require('path')
+const multer = require('multer')
+const storage  = multer.diskStorage({
+    destination:(req, file, cb)=>{
+        cb(null,'./public')
+    },
+    filename:(req, file, cb)=>{
+        console.log(file)
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+const upload = multer({storage: storage})
 
 const app = express();
 app.use(cors());
@@ -19,6 +32,11 @@ let vaga = models.Vaga
 let candidatura = models.Candidatura
 let area = models.Area
 let empresa = models.Empresa
+
+app.post('/uploadImage',upload.single('data'), (req, res) =>{
+    res.send("Passou pelo Upload")
+
+});
 
 //AREA
 

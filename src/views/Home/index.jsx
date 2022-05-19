@@ -3,10 +3,11 @@ import { StyleSheet, Text, View, StatusBar, Image } from 'react-native';
 import { styles } from './styles'
 import { useAuth } from "../../hooks/useAuth";
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import axios from 'axios';
+import api from '../../services/api';
 import Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions'
-import * as ImagePicker from 'expo-image-picker'
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import * as Network from "expo-network"
 
 export default function Home() {
   const { signOut } = useAuth()
@@ -44,7 +45,14 @@ export default function Home() {
       uri: avatar.uri,
       type: avatar.type
     });
-    await axios.post('http://192.168.1.10:3000/public/', data).catch(error => console.log("Erro: " + error))
+    console.log(data)
+    // await axios.post('http://192.168.1.10:3000/public', data)
+    // .then(res => console.log(res))
+    // .catch(error => console.log("Erro: " + error))
+
+    api.post(`uploadImage/`, data).then(res => {
+  }).catch(error => console.log("Erro: " + error))
+
   }
 
   return (
@@ -52,7 +60,7 @@ export default function Home() {
     <View style={styles.container}>
       <StatusBar backgroundColor={'white'} barStyle='dark-content' />
       <Text>
-        ÁREA DE ESTUDANTE:
+       ip:{}
       </Text>
       <TouchableOpacity onPress={() => signOut()} style={{
         backgroundColor: 'pink',
