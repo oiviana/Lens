@@ -21,10 +21,10 @@ export default function EditaPerfil() {
         api.get(`studentprofile/${userData.id}`).then(response => {
             setStudentdata(response.data)
         }).catch(error => console.log("Erro: " + error))
-
-        setNome(JSON.stringify(studentdata.nome))
+    }, [])
+    useEffect(() => {
+        setNome(studentdata.nome)
         console.log(nome)
-
     }, [])
 
 
@@ -80,7 +80,7 @@ export default function EditaPerfil() {
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setNome(text) }}
-                    value={studentdata.nome}
+                    value={nome}
 
                 />
             </View>

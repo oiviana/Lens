@@ -32,6 +32,7 @@ export default function Perfil() {
                 <View style={styles.content}>
                     <Image
                         style={styles.institutionImage}
+                       source={{uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`,} }
                         
                     />
                     <View style={styles.formationContent}>

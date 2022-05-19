@@ -33,7 +33,7 @@ let candidatura = models.Candidatura
 let area = models.Area
 let empresa = models.Empresa
 
-app.post('/uploadImage',upload.single('data'), (req, res) =>{
+app.post('/uploadImage',upload.single('avatar'), (req, res) =>{
     res.send("Passou pelo Upload")
 
 });
