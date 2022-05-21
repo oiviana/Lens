@@ -23,6 +23,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('public'))
 
+const { Op } = require("sequelize");
 //Models
 let estudante = models.Estudante;
 let enderecoestudante = models.Endereco_estudante;
@@ -40,8 +41,15 @@ app.post('/uploadImage',upload.single('avatar'), (req, res) =>{
 
 //AREA
 
-app.get('/readAreas', (req, res) => {
-    area.findAll({}).then(teste => res.send(teste))
+app.get('/readAreas/:id', (req, res) => {
+    const id =req.params['id']
+    area.findAll({
+        where:{
+            id: {
+                [Op.not]: id
+              }
+        }
+    }).then(teste => res.send(teste))
         .catch(error => console.log(error))
 });
 
@@ -126,12 +134,13 @@ app.get('/checkCandidatura/:estId&:vagaId', (req, res) => {
 app.post('/createEstudante', async (req, res) => {
     let createEstudante = await estudante.create({
         nome: req.body.nome,
-        sobrenome: req.body.sobrenome,
+        sobrenome: '',
         email: req.body.email,
         senha: req.body.password,
         RG: req.body.rg,
         CPF: req.body.cpf,
         imagem:'http://localhost:3000/img/user.png',
+        areaId:0,
         createAt: new Date(),
         updatedAt: new Date()
     });
@@ -149,7 +158,7 @@ app.get('/studentprofile/:id', (req, res) => {
     estudante.findByPk(id,{
         include: [{
             model: area,
-            attributes: ['nome_area']
+            attributes: ['nome_area','id']
         }]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))

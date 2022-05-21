@@ -20,12 +20,11 @@ function AuthProvider({ children }) {
     }, [])
 
 
-    async function signUp(nome, sobrenome, rg, cpf, email, password, password2) {
+    async function signUp(nome, rg, cpf, email, password, password2) {
         if (password == password2) {
             console.log("passou aqui")
             const response = await api.post('/createEstudante', {
                 nome: nome,
-                sobrenome: sobrenome,
                 rg: rg,
                 cpf: cpf,
                 email: email,
@@ -53,7 +52,6 @@ function AuthProvider({ children }) {
             email: email,
             password: password
         })
-        console.log(response.data)
         if (response.data === "Credenciais incorretas") {
             ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
             return

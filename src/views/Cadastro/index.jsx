@@ -7,7 +7,6 @@ import { AuthContext } from '../../contexts/auth';
 export default function Home() {
     const { signUp } = useContext(AuthContext);
     const [nome, setNome] = useState(initialState = null);
-    const [sobrenome, setSobrenome] = useState(initialState = null);
     const [rg, setRg] = useState(initialState = null);
     const [cpf, setCpf] = useState(initialState = null);
     const [email, setEmail] = useState(initialState = null);
@@ -19,17 +18,10 @@ export default function Home() {
             <View style={styles.formContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder='Nome'
+                    placeholder='Nome Completo'
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setNome(text) }}
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Sobrenome'
-                    autoCorrect={false}
-                    selectionColor={'#5155b4'}
-                    onChangeText={(text) => { setSobrenome(text) }}
                 />
                 <TextInput
                     style={styles.input}
@@ -69,7 +61,7 @@ export default function Home() {
             </View>
             <View style={styles.buttonContainer}>
                 <TouchableOpacity style={styles.sigInButton}
-                    onPress={() => { signUp(nome,sobrenome,rg,cpf,email,password,password2)}}>
+                    onPress={() => { signUp(nome,rg,cpf,email,password,password2)}}>
                     <Text style={styles.textButton}>Cadastre-se</Text>
                 </TouchableOpacity>
 
