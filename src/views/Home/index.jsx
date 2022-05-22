@@ -35,22 +35,20 @@ export default function Home() {
     return;
   }
   setAvatar(data)
-  console.log(data.uri)
   }
 
   async function uploadImage() {
+    console.log({avatar})
     const data = new FormData();
 
     data.append('avatar', {
       uri: avatar.uri,
-      type: avatar.type
+      // type: 'image/jpeg'
     });
-    console.log(data)
-    // await axios.post('http://192.168.1.10:3000/public', data)
-    // .then(res => console.log(res))
-    // .catch(error => console.log("Erro: " + error))
+    console.log({data})
 
-    api.post(`uploadImage/`, data).then(res => {
+
+    api.post(`uploadImage`, data).then(res => {
   }).catch(error => console.log("Erro: " + error))
 
   }

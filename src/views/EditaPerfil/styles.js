@@ -56,12 +56,40 @@ const styles = StyleSheet.create({
     },
     addresModalLabel:{
         alignSelf:'flex-start',
-        paddingLeft:40,
         fontSize:18,
         fontWeight:'700',
         paddingBottom:5
 
     },
-
+    addresRow:{
+        flexDirection:'row',
+        width:'80%',
+        justifyContent:'space-between',
+ 
+    },
+    inputrow:{
+        borderBottomWidth:1.5,
+        borderBottomColor: '#5f5f63',
+        padding:5,
+        marginBottom:40,
+        fontSize:18
+    },
+    fieldSet:{
+        width:'30%'
+    },
+    addresButton:{
+        backgroundColor:'#5155b4',
+        padding:18,
+        borderRadius:6,
+        width:325,
+        alignItems:'center',
+        justifyContent:'center',
+        marginBottom:20,
+        shadowColor: "#000",
+    },
+    textButton:{
+        color:'white',
+        fontSize:18
+    }
 });
 export { styles }

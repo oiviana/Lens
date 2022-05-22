@@ -17,6 +17,7 @@ export default function EditaPerfil() {
     const { userData } = useAuth();
     const [avatar, setAvatar] = useState();
     const [studentdata, setStudentdata] = useState([{}]);
+    const [addressdata, setAddressdata] = useState([{}]);
     const [areadata, setAreadata] = useState([{}]);
     const idArea = studentdata.Area?.id
 
@@ -31,7 +32,12 @@ export default function EditaPerfil() {
         }).catch(error => console.log("Erro: " + error))
     }, [])
 
-    console.log("id da area " + idArea)
+    function getAddress(){
+        api.get(`/studentender/${userData.id}`).then(response => {
+            setAddressdata(response.data)
+        }).catch(error => console.log("Erro: " + error))
+    }
+
     async function imagePickerCall() {
         if (Constants.platform.ios) {
             const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
@@ -116,33 +122,72 @@ export default function EditaPerfil() {
 
             <Modalize
                 ref={addresRef}
-                snapPoint={830}
+                adjustToContentHeight={true}
+                withReactModal={true}
+                onOpen={getAddress()}
             >
                 <KeyboardAvoidingView style={styles.addresModal}>
-                    <Text style={styles.addresModalLabel}>CEP:</Text>
+                    <Text style={styles.nameLabel}>CEP:</Text>
                     <TextInput
                         style={styles.inputname}
                         autoCorrect={false}
                         selectionColor={'#5155b4'}
                         onChangeText={(text) => { setNome(text) }}
-                        defaultValue={"CU"}
+                        defaultValue={addressdata.CEP}
+                        keyboardType='numeric'
                     />
-                    <Text style={styles.addresModalLabel}>Rua (Logradouro):</Text>
+                    <Text style={styles.nameLabel}>Rua (Logradouro):</Text>
                     <TextInput
                         style={styles.inputname}
                         autoCorrect={false}
                         selectionColor={'#5155b4'}
                         onChangeText={(text) => { setNome(text) }}
-                        defaultValue={"CU"}
+                        defaultValue={addressdata.logradouro}
                     />
-                          <Text style={styles.addresModalLabel}>Bairro:</Text>
+                    <Text style={styles.nameLabel}>Bairro:</Text>
                     <TextInput
                         style={styles.inputname}
                         autoCorrect={false}
                         selectionColor={'#5155b4'}
                         onChangeText={(text) => { setNome(text) }}
-                        defaultValue={"CU"}
+                        defaultValue={addressdata.bairro}
                     />
+                    <View style={styles.addresRow}>
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.addresModalLabel}>Número:</Text>
+                            <TextInput
+                                style={styles.inputrow}
+                                autoCorrect={false}
+                                selectionColor={'#5155b4'}
+                                keyboardType='numeric'
+                                onChangeText={(text) => { setNome(text) }}
+                                defaultValue={JSON.stringify( addressdata.numero)}
+                            />
+                        </View>
+
+                        <View style={styles.fieldSet}>
+                            <Text style={styles.addresModalLabel}>UF:</Text>
+                            <TextInput
+                                style={styles.inputrow}
+                                autoCorrect={false}
+                                selectionColor={'#5155b4'}
+                                onChangeText={(text) => { setNome(text) }}
+                                defaultValue={addressdata.UF}
+                            />
+                        </View>
+                    </View>
+                    <Text style={styles.nameLabel}>Cidade:</Text>
+                    <TextInput
+                        style={styles.inputname}
+                        autoCorrect={false}
+                        selectionColor={'#5155b4'}
+                        onChangeText={(text) => { setNome(text) }}
+                        defaultValue={addressdata.cidade}
+                    />
+                    <TouchableOpacity style={styles.addresButton}
+                        onPress={() => { Login() }}>
+                        <Text style={styles.textButton}>Atualizar</Text>
+                    </TouchableOpacity>
 
 
 

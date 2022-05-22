@@ -45,6 +45,7 @@ export default function VagaInfo({ route }) {
     }
 
     return (
+        <View>
         <ScrollView style={styles.container}>
             <View style={styles.headerVaga}>
                 <Image
@@ -91,6 +92,6 @@ export default function VagaInfo({ route }) {
                     <Text>Candidato!</Text>
                 </View>}
         </ScrollView>
-
+        </View>
     );
 }

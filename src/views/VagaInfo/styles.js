@@ -51,6 +51,7 @@ const styles = StyleSheet.create({
         width:300,
         alignItems:'center',
         justifyContent:'center',
+        marginBottom:40
     },
     textButton:{
         color:'white',
@@ -64,7 +65,9 @@ const styles = StyleSheet.create({
         borderRadius:3,
         width:300,
         alignItems:'center',
-        justifyContent:'center'
+        justifyContent:'center',
+        marginBottom:40
+
     },
 });
 export{styles}

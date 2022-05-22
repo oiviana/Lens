@@ -18,7 +18,6 @@ export default function Perfil() {
 
         api.get(`readFormacao/${userData.id}`).then(response => {
             setFormationdata(response.data)
-            console.log(formationdata)
         }).catch(error => console.log("Erro: " + error))
 
         api.get(`studentender/${userData.id}`).then(response => {
@@ -26,7 +25,7 @@ export default function Perfil() {
         }).catch(error => console.log("Erro: " + error))
 
     }, [])
-
+console.log("formationData", formationdata)
     function getFormacoes({ item }) {
         return (
             <>
@@ -85,33 +84,27 @@ export default function Perfil() {
             <View style={styles.containerFormations}>
                 <Text style={styles.title}>Formação Acadêmica</Text>
 
-                
-                <FlatList
-                    keyExtractor={() => Math.random()}
-                    data={formationdata}
-                    renderItem={getFormacoes}
-        
-                />
+     {formationdata.map((item) =>{
+
+  return(
+    <>
+    <View style={styles.content} key={item.id}>
+        <Image
+            style={styles.institutionImage}
+           source={{uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`,} }
+            
+        />
+        <View style={styles.formationContent}>
+            <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
+            <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
+            <Text style={styles.formationYear}>2019 - 2022</Text>
+        </View>
+    </View>
+    <Divider width={1} color='#DCDCDC' />
+</>     
+  );
+})}
             </View>
         </View>
     );
 }
-
-// {formationdata.map((item) =>{
-//     <>
-//     <View style={styles.content} key={item.id}>
-//         <Image
-//             style={styles.institutionImage}
-//            source={{uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`,} }
-            
-//         />
-//         <View style={styles.formationContent}>
-//             <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
-//             <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
-//             <Text style={styles.formationYear}>2019 - 2022</Text>
-//         </View>
-//     </View>
-//     <Divider width={1} color='#DCDCDC' />
-// </>
-
-// })}
