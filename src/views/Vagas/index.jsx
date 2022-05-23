@@ -10,7 +10,6 @@ export default function Vagas({ navigation }) {
   useEffect(() => {
     api.get('/readVagas').then(response => {
       setVagas(response.data)
-      console.log(response.data)
     }).catch(error =>console.log("Texto depois"+error) )
     
   }, [])

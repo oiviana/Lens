@@ -90,6 +90,51 @@ const styles = StyleSheet.create({
     textButton:{
         color:'white',
         fontSize:18
+    },
+    formationContainers:{
+        paddingTop:25,
+
+    },
+    formationButton:{
+        paddingTop:20,
+        paddingLeft:30
+    },
+
+    content: {
+        display: 'flex',
+        flexDirection: 'row',
+        marginBottom: 10,
+        marginTop: 10
+    },
+    institutionImage: {
+        width: 80,
+        height: 80,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: '#c5c5c7',
+        marginLeft: 5,
+        marginRight: 20
+    },
+    
+    formationContent: {
+        display: 'flex',
+        flexDirection: 'column'
+    },
+    formationInstitution: {
+        fontSize: 17,
+        fontWeight: '700',
+        padding: 2
+    },
+    formationStatus: {
+        fontSize: 16,
+        padding: 2
+    },
+    formationYear: {
+        padding: 2
+    },
+    addformationButton:{
+        flexDirection:'row',
+        paddingTop:10
     }
 });
 export { styles }

@@ -49,7 +49,7 @@ console.log("formationData", formationdata)
 
 
     return (
-        <View>
+        <ScrollView>
             <View style={styles.containerAboutUser}>
                 <Image
                     style={styles.profileImage}
@@ -87,8 +87,8 @@ console.log("formationData", formationdata)
      {formationdata.map((item) =>{
 
   return(
-    <>
-    <View style={styles.content} key={item.id}>
+    <View  key={item.id}>
+    <View style={styles.content}>
         <Image
             style={styles.institutionImage}
            source={{uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`,} }
@@ -101,10 +101,10 @@ console.log("formationData", formationdata)
         </View>
     </View>
     <Divider width={1} color='#DCDCDC' />
-</>     
+</View>     
   );
 })}
             </View>
-        </View>
+        </ScrollView>
     );
 }
