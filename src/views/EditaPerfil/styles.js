@@ -135,6 +135,9 @@ const styles = StyleSheet.create({
     addformationButton:{
         flexDirection:'row',
         paddingTop:10
+    },
+    dateRow:{
+        flexDirection:'row'
     }
 });
 export { styles }

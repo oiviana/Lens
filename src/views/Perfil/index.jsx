@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, Image, FlatList, SectionList } from 'react-native';
+import { Text, View, ScrollView, Image,} from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles'
 import { Entypo } from '@expo/vector-icons';
@@ -25,35 +25,13 @@ export default function Perfil() {
         }).catch(error => console.log("Erro: " + error))
 
     }, [])
-console.log("formationData", formationdata)
-    function getFormacoes({ item }) {
-        return (
-            <>
-                <View style={styles.content}>
-                    <Image
-                        style={styles.institutionImage}
-                       source={{uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`,} }
-                        
-                    />
-                    <View style={styles.formationContent}>
-                        <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
-                        <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
-                        <Text style={styles.formationYear}>2019 - 2022</Text>
-                    </View>
-                </View>
-                <Divider width={1} color='#DCDCDC' />
-            </>
-        );
-    }
-
-
 
     return (
         <ScrollView>
             <View style={styles.containerAboutUser}>
                 <Image
                     style={styles.profileImage}
-                    source={{uri: `http://192.168.1.10:3000/img/estudante/${studentdata.imagem}`,}}
+                    source={{ uri: `${process.env.REACT_APP_BASE_URL}/img/estudante/${studentdata.imagem}`, }}
                 />
                 <View style={styles.userContent}>
                     <Text style={styles.userName}>{studentdata.nome} {studentdata.sobrenome}</Text>
@@ -84,26 +62,26 @@ console.log("formationData", formationdata)
             <View style={styles.containerFormations}>
                 <Text style={styles.title}>Formação Acadêmica</Text>
 
-     {formationdata.map((item) =>{
+                {formationdata.map((item,index) => {
 
-  return(
-    <View  key={item.id}>
-    <View style={styles.content}>
-        <Image
-            style={styles.institutionImage}
-           source={{uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`,} }
-            
-        />
-        <View style={styles.formationContent}>
-            <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
-            <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
-            <Text style={styles.formationYear}>2019 - 2022</Text>
-        </View>
-    </View>
-    <Divider width={1} color='#DCDCDC' />
-</View>     
-  );
-})}
+                    return (
+                        <View key={index}>
+                            <View style={styles.content}>
+                                <Image
+                                    style={styles.institutionImage}
+                                    source={{ uri: `http://192.168.187.70:3000/img/empresa/logo_fatec.png`, }}
+
+                                />
+                                <View style={styles.formationContent}>
+                                    <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
+                                    <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
+                                    <Text style={styles.formationYear}>2019 - 2022</Text>
+                                </View>
+                            </View>
+                            <Divider width={1} color='#DCDCDC' />
+                        </View>
+                    );
+                })}
             </View>
         </ScrollView>
     );

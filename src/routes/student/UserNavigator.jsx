@@ -1,9 +1,10 @@
 import React from "react";
-import { Button } from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Perfil from '../../views/Perfil';
 import EditaPerfil from "../../views/EditaPerfil";
+import { Feather } from '@expo/vector-icons';
 
 const Stack = createStackNavigator();
 
@@ -13,12 +14,9 @@ export default function UserNavigator({ navigation }) {
         <Stack.Navigator>
             <Stack.Screen name="Perfil" component={Perfil} options={{
                 headerRight: () => (
-                    <Button
-                        onPress={() => navigation.navigate('Editar Perfil')}
-                        title="Editar"
-                        color="#000"
-                        icon
-                    />
+                    <TouchableOpacity onPress={() => navigation.navigate('Editar Perfil')}>
+                        <Feather name='edit-2' size={25} color={'#000'} style={{paddingRight:8}} />
+                    </TouchableOpacity>
                 ),
 
             }} />

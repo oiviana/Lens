@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, Button } from 'react-native';
 import { Divider } from 'react-native-elements';
-import { styles } from './styles'
+import { styles } from './styles';
+import cursos from '../../assets/cursos';
 import { Entypo, Feather } from '@expo/vector-icons';
 import { useAuth } from "../../hooks/useAuth";
 import api from '../../services/api';
@@ -10,18 +11,38 @@ import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { Picker } from '@react-native-picker/picker';
 import { Modalize } from 'react-native-modalize';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function EditaPerfil() {
     const [nome, setNome] = useState();
     const [selectedArea, setSelectedArea] = useState();
+    const [selectedCurso, setSelectedCurso] = useState();
     const { userData } = useAuth();
     const [avatar, setAvatar] = useState();
     const [studentdata, setStudentdata] = useState([{}]);
     const [addressdata, setAddressdata] = useState([{}]);
     const [formationdata, setFormationdata] = useState([{}]);
     const [areadata, setAreadata] = useState([{}]);
-
     const idArea = studentdata.Area?.id
+
+    const [date, setDate] = useState(new Date());
+    const [mode, setMode] = useState('date');
+    const [show, setShow] = useState(false);
+
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(false);
+        setDate(currentDate);
+        var tempDate = new Date(currentDate);
+        var formatDate = `${tempDate.getDate()}/0${(tempDate.getMonth() + 1)}/${tempDate.getFullYear()}`
+        setDate(formatDate);
+    };
+
+    const showMode = (currentMode) => {
+        setShow(true);
+        setMode(currentMode);
+    };
+
     useEffect(() => {
 
         api.get(`studentprofile/${userData.id}`).then(response => {
@@ -85,7 +106,7 @@ export default function EditaPerfil() {
                         source={{
                             uri: avatar
                                 ? avatar.uri
-                                : `http://192.168.1.10:3000/img/estudante/${studentdata.imagem}`
+                                : `${process.env.REACT_APP_BASE_URL}/img/estudante/${studentdata.imagem}`
                         }}
                         style={styles.imgEdit}
                     />
@@ -110,7 +131,7 @@ export default function EditaPerfil() {
                     onValueChange={(itemValue, itemIndex) =>
                         setSelectedArea(itemValue)}>
                     <Picker.Item label={studentdata.Area?.nome_area} value={studentdata.Area?.id} key={studentdata.id} />
-                    {areadata.map((item) => <Picker.Item label={item.nome_area} value={item.id} key={item.id} />)}
+                    {areadata.map((item, index) => <Picker.Item label={item.nome_area} value={item.id} key={index} />)}
                 </Picker>
             </View>
 
@@ -128,14 +149,14 @@ export default function EditaPerfil() {
             <View style={styles.formationContainers}>
                 <Text style={styles.nameLabel}>Histórico Acadêmico</Text>
 
-                {formationdata.map((item) => {
+                {formationdata.map((item, index) => {
 
                     return (
-                        <TouchableOpacity key={item.id} style={styles.formationButton}>
+                        <TouchableOpacity key={index} style={styles.formationButton}>
                             <View style={styles.content}>
                                 <Image
                                     style={styles.institutionImage}
-                                    source={{ uri: `http://192.168.1.10:3000/img/empresa/logo_fatec.png`, }}
+                                    source={{ uri: `${process.env.REACT_APP_BASE_URL}/img/empresa/logo_fatec.png`, }}
                                 />
                                 <View style={styles.formationContent}>
                                     <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
@@ -235,12 +256,36 @@ export default function EditaPerfil() {
                 >
                     <KeyboardAvoidingView style={styles.addresModal}>
 
+                        <Text style={styles.nameLabel}>Curso:</Text>
+                        <Picker style={styles.pickerContainer}
+                            selectedValue={selectedCurso}
+                            onValueChange={(itemValue, itemIndex) =>
+                                setSelectedCurso(itemValue)}>
+                            {cursos.map((item, index) => <Picker.Item label={item.nome} value={item.nome} key={index} />)}
+                        </Picker>
+                        <View style={styles.dateRow}>
+                            <TouchableOpacity onPress={() => showMode('date')}>
+                                {<Text>Selecionar data</Text>}
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => showMode('date')}>
+                                {<Text>Selecionar data</Text>}
+                            </TouchableOpacity>
+                            {show && (
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={date}
+                                    mode={mode}
+                                    is24Hour={true}
+                                    onChange={onChange}
+                                />
+                            )}
 
+                        </View>
 
-
+                        <Text>selected: {date.toLocaleString()}</Text>
                     </KeyboardAvoidingView>
                 </Modalize>
- 
+
             </View>
 
         </ScrollView>

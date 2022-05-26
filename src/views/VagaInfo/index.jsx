@@ -50,7 +50,7 @@ export default function VagaInfo({ route }) {
             <View style={styles.headerVaga}>
                 <Image
                     style={styles.companyImage}
-                    source={{ uri: `http://192.168.1.10:3000/img/empresa/${vagainfo.Empresa?.imagem}`,}}
+                    source={{ uri: `${process.env.REACT_APP_BASE_URL}/img/empresa/${vagainfo.Empresa?.imagem}`,}}
                 />
                 <Text style={styles.vacancyTitle}>{vagainfo.titulo}</Text>
             </View>

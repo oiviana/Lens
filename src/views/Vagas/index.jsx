@@ -21,7 +21,7 @@ export default function Vagas({ navigation }) {
         <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('Sobre a Vaga',{vagaid: item.id})}>
           <Image
             style={styles.companyImage}
-            source={{ uri: `http://192.168.1.10:3000/img/empresa/${item?.Empresa?.imagem}`,}}
+            source={{ uri: `http://192.168.187.70:3000/img/empresa/${item?.Empresa?.imagem}`,}}
           />
           <View style={styles.vacancyContent}>
             <Text style={styles.vacancyTitle}>{item.titulo}</Text>

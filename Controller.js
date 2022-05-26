@@ -33,6 +33,7 @@ const { Op } = require("sequelize");
 //Models
 let estudante = models.Estudante;
 let enderecoestudante = models.Endereco_estudante;
+let enderecoempresa = models.Endereco_empresa;
 let formacao = models.Formacao;
 let instformacao = models.Instformacao;
 let vaga = models.Vaga
@@ -184,6 +185,7 @@ app.post('/login', async (req, res) => {
 });
 // ESTUDANTE
 
+
 // ENDEREÇO ESTUDANTE
 app.get('/studentender/:id', (req, res) => {
     const id = req.params['id']
@@ -193,8 +195,20 @@ app.get('/studentender/:id', (req, res) => {
         .catch(error => console.log(error))
 });
 
-
 // ENDEREÇO ESTUDANTE
+
+
+// ENDEREÇO EMPRESA
+app.get('/companyender/:id', (req, res) => {
+    const id = req.params['id']
+    enderecoempresa.findOne({
+        where: { empresaId: id}
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+
+// ENDEREÇO EMPRESA
 
 // FORMAÇÕES
 
@@ -214,6 +228,7 @@ app.get('/readFormacao/:id', (req, res) => {
 
 // FORMAÇÕES
 
+
 //EMPRESA
 app.post('/logincompany', async (req, res) => {
     let response = await empresa.findOne({
@@ -225,6 +240,17 @@ app.post('/logincompany', async (req, res) => {
         res.send(response);
         console.log(response)
     }
+});
+
+app.get('/companyprofile/:id', (req, res) => {
+    const id = req.params['id']
+    empresa.findByPk(id,{
+        include: [{
+            model: area,
+            attributes: ['nome_area','id']
+        }]
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
 });
 
 
