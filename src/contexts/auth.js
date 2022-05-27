@@ -31,7 +31,6 @@ function AuthProvider({ children }) {
                 password: password
             })
             console.log("passou aqui 2")
-            console.log(response.data)
             if (response.data === "erro") {
                 ToastAndroid.show("Ocorreu um erro", ToastAndroid.LONG)
             }
@@ -67,7 +66,6 @@ function AuthProvider({ children }) {
             email: email,
             password: password
         })
-        console.log(response.data)
         if (response.data === "Credenciais incorretas") {
             ToastAndroid.show("Credenciais incorretas", ToastAndroid.LONG)
             return

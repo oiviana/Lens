@@ -77,6 +77,18 @@ app.get('/readVagas', (req, res) => {
         .catch(error => console.log(error))
 });
 
+//Select Vagas por empresa
+app.get('/readVagasbycompany/:id', (req, res) => {
+    const id =req.params['id']
+    vaga.findAll({
+        where:{
+            empresaId: id
+        }
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+
 //Select vaga by id
 app.get('/aboutVaga/:id', (req, res) => {
     const id = req.params['id']
