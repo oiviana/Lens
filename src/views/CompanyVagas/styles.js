@@ -7,6 +7,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         padding:12
     },
+    vacancyModal:{
+        justifyContent:'center',
+        alignItems:'center'
+    },
+
     vacancyButton:{
         flexDirection:'row',
         paddingBottom:10,
@@ -64,7 +69,57 @@ const styles = StyleSheet.create({
         marginLeft:5,
         width:'25%'   
         
-    }
+    },
+    modalTitle:{
+        fontSize:22,
+        fontWeight:'bold',
+        padding:15
+
+    },
+    nameLabel:{
+        alignSelf:'flex-start',
+        paddingLeft:40,
+        fontSize:19,
+        fontWeight:'700',
+        paddingBottom:5
+
+    },
+    inputname:{
+        borderBottomWidth:1.5,
+        borderBottomColor: '#5f5f63',
+        width:310,
+        padding:5,
+        marginBottom:40,
+        fontSize:18,
+    },
+    inputdescription:{
+        borderWidth:1.3,
+        borderColor: '#b3b5b5',
+        width:310,
+        padding:5,
+        marginBottom:40,
+        fontSize:18,
+        alignSelf:'center',
+        borderRadius:3
+    },
+    pickerContainer:{
+        width:320,
+        marginBottom:40,
+    },
+    addresButton:{
+        backgroundColor:'#5155b4',
+        padding:18,
+        borderRadius:6,
+        width:325,
+        alignItems:'center',
+        justifyContent:'center',
+        marginBottom:20,
+        shadowColor: "#000",
+    },
+    textButton:{
+        color:'white',
+        fontSize:18
+    },
     
 });
 export{styles}
