@@ -13,17 +13,15 @@ import { Picker } from '@react-native-picker/picker';
 import { Modalize } from 'react-native-modalize';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function EditaPerfil() {
+export default function CompanyEdita() {
     const [nome, setNome] = useState();
     const [selectedArea, setSelectedArea] = useState();
-    const [selectedCurso, setSelectedCurso] = useState();
     const { userData } = useAuth();
     const [avatar, setAvatar] = useState();
-    const [studentdata, setStudentdata] = useState([{}]);
+    const [companydata, setCompanydata] = useState([{}]);
     const [addressdata, setAddressdata] = useState([{}]);
-    const [formationdata, setFormationdata] = useState([{}]);
     const [areadata, setAreadata] = useState([{}]);
-    const idArea = studentdata.Area?.id
+    const idArea = companydata.Area?.id
 
     const [date, setDate] = useState(new Date());
     const [mode, setMode] = useState('date');
@@ -45,17 +43,14 @@ export default function EditaPerfil() {
 
     useEffect(() => {
 
-        api.get(`studentprofile/${userData.id}`).then(response => {
-            setStudentdata(response.data)
+        api.get(`companyprofile/${userData.id}`).then(response => {
+            setCompanydata(response.data)
         }).catch(error => console.log("Erro: " + error))
 
         api.get(`readAreas/${idArea}`).then(response => {
             setAreadata(response.data)
         }).catch(error => console.log("Erro: " + error))
 
-        api.get(`readFormacao/${userData.id}`).then(response => {
-            setFormationdata(response.data)
-        }).catch(error => console.log("Erro: " + error))
     }, [idArea])
 
 
@@ -88,15 +83,11 @@ export default function EditaPerfil() {
     function OpenAdrresModal() {
         addresRef.current?.open();
 
-        api.get(`/studentender/${userData.id}`).then(response => {
+        api.get(`/companyender/${userData.id}`).then(response => {
             setAddressdata(response.data)
         }).catch(error => console.log("Erro: " + error))
     }
 
-    const formationRef = useRef(null); //ref modal de formações
-    function OpenaddFormationModal() {
-        formationRef.current?.open();
-    }
 
     return (
         <ScrollView>
@@ -106,7 +97,7 @@ export default function EditaPerfil() {
                         source={{
                             uri: avatar
                                 ? avatar.uri
-                                : `${process.env.REACT_APP_BASE_URL}/img/estudante/${studentdata.imagem}`
+                                : `${process.env.REACT_APP_BASE_URL}/img/empresa/${companydata.imagem}`
                         }}
                         style={styles.imgEdit}
                     />
@@ -117,34 +108,51 @@ export default function EditaPerfil() {
             </View>
 
             <View style={styles.nameContainer}>
-                <Text style={styles.nameLabel}>Nome Completo:</Text>
+                <Text style={styles.nameLabel}>Nome Comercial:</Text>
                 <TextInput
                     style={styles.inputname}
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setNome(text) }}
-                    defaultValue={studentdata.nome}
+                    defaultValue={companydata.nome}
                 />
                 <Text style={styles.nameLabel}>Área de interesse:</Text>
                 <Picker style={styles.pickerContainer}
                     selectedValue={selectedArea}
                     onValueChange={(itemValue, itemIndex) =>
                         setSelectedArea(itemValue)}>
-                    <Picker.Item label={studentdata.Area?.nome_area} value={studentdata.Area?.id} key={studentdata.id} />
+                    <Picker.Item label={companydata.Area?.nome_area} value={companydata.Area?.id} key={companydata.id} />
                     {areadata.map((item, index) => <Picker.Item label={item.nome_area} value={item.id} key={index} />)}
                 </Picker>
-            </View>
 
-         
-            <Text style={styles.nameLabel}>Sobre Mim:</Text>
-            <TextInput
-                style={styles. inputdescription}
-                autoCorrect={false}
-                selectionColor={'#5155b4'}
-                onChangeText={(text) => { setNome(text) }}
-                defaultValue={studentdata.sobre}
-                multiline={true}
-            />
+                <Text style={styles.nameLabel}>Sobre Mim:</Text>
+                <TextInput
+                    style={styles.inputdescription}
+                    autoCorrect={false}
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setNome(text) }}
+                    defaultValue={companydata.sobre}
+                    multiline={true}
+                />
+
+                <Text style={styles.nameLabel}>Área de atuação:</Text>
+                <TextInput
+                    style={styles.inputname}
+                    autoCorrect={false}
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setNome(text) }}
+                    defaultValue={companydata.atuacao}
+                />
+
+                <Text style={styles.nameLabel}>Site:</Text>
+                <TextInput
+                    style={styles.inputname}
+                    autoCorrect={false}
+                    selectionColor={'#5155b4'}
+                    onChangeText={(text) => { setNome(text) }}
+                    defaultValue={companydata.site}
+                />
+            </View>
 
             <Divider width={3} color='#DCDCDC' />
 
@@ -155,37 +163,9 @@ export default function EditaPerfil() {
                 }} />
             </TouchableOpacity>
 
-            <Divider width={3} color='#DCDCDC' />
+            <Divider width={3} color='#DCDCDC' style={{marginBottom:15}}/>
 
-            <View style={styles.formationContainers}>
-                <Text style={styles.nameLabel}>Histórico Acadêmico</Text>
 
-                {formationdata.map((item, index) => {
-
-                    return (
-                        <TouchableOpacity key={index} style={styles.formationButton}>
-                            <View style={styles.content}>
-                                <Image
-                                    style={styles.institutionImage}
-                                    source={{ uri: `${process.env.REACT_APP_BASE_URL}/img/empresa/logo_fatec.png`, }}
-                                />
-                                <View style={styles.formationContent}>
-                                    <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
-                                    <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
-                                    <Text style={styles.formationYear}>2019 - 2022</Text>
-                                </View>
-                            </View>
-                        </TouchableOpacity>
-                    );
-                })}
-                <TouchableOpacity style={styles.addformationButton} onPress={OpenaddFormationModal}>
-                    <Feather name='plus-circle' size={25} color={'#5f5f63'} style={{
-                        marginLeft: 105
-                    }} />
-                    <Text style={{ fontSize: 17, paddingLeft: 8, paddingTop: 1 }}>Adicionar formação</Text>
-
-                </TouchableOpacity>
-            </View>
             <View>
 
                 {/* Adrress modal */}
@@ -259,44 +239,6 @@ export default function EditaPerfil() {
                         </TouchableOpacity>
                     </KeyboardAvoidingView>
                 </Modalize>
-
-                <Modalize
-                    ref={formationRef}
-                    adjustToContentHeight={true}
-                    withReactModal={true}
-                >
-                    <KeyboardAvoidingView style={styles.addresModal}>
-
-                        <Text style={styles.nameLabel}>Curso:</Text>
-                        <Picker style={styles.pickerContainer}
-                            selectedValue={selectedCurso}
-                            onValueChange={(itemValue, itemIndex) =>
-                                setSelectedCurso(itemValue)}>
-                            {cursos.map((item, index) => <Picker.Item label={item.nome} value={item.nome} key={index} />)}
-                        </Picker>
-                        <View style={styles.dateRow}>
-                            <TouchableOpacity onPress={() => showMode('date')}>
-                                {<Text>Selecionar data</Text>}
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => showMode('date')}>
-                                {<Text>Selecionar data</Text>}
-                            </TouchableOpacity>
-                            {show && (
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={date}
-                                    mode={mode}
-                                    is24Hour={true}
-                                    onChange={onChange}
-                                />
-                            )}
-
-                        </View>
-
-                        <Text>selected: {date.toLocaleString()}</Text>
-                    </KeyboardAvoidingView>
-                </Modalize>
-
             </View>
 
         </ScrollView>

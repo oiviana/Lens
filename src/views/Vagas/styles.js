@@ -7,6 +7,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         padding:12
     },
+    inputSearch:{
+        backgroundColor:'white',
+        width:340,
+        padding:12,
+        alignSelf:'center',
+        borderRadius:4,
+        marginTop:15,
+        color:'#000'
+    },
     title:{
         fontSize:22,
         fontWeight:'600',

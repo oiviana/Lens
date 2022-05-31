@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     imgEdit:{
         width: 120,
         height: 120,
-        borderRadius: 70,
+        borderRadius: 8,
         borderWidth: 1,
         borderColor: '#c5c5c7'
     },
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     },
     pickerContainer:{
         width:320,
-        marginBottom:25,
+        marginBottom:30,
     },
     buttonAdress:{
         flexDirection:'row',

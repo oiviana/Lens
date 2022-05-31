@@ -93,13 +93,13 @@ export default function CompanyEditVaga({ route }) {
                     )
                 }
                 <Text style={styles.nameLabel}>Turno:</Text>
-                {vagainfo?.periodo == 'Manha'
+                {vagainfo?.periodo == 'Manhã'
                     ? (
                         <Picker style={styles.pickerContainer}
                             selectedValue={turno}
                             onValueChange={(itemValue, itemIndex) =>
                                 setTurno(itemValue)}>
-                            <Picker.Item label={'Manhã'} value={'Manha'} />
+                            <Picker.Item label={'Manhã'} value={'Manhã'} />
                             <Picker.Item label={'Noturno'} value={'Noturno'} />
                         </Picker>
                     )
@@ -109,7 +109,7 @@ export default function CompanyEditVaga({ route }) {
                             onValueChange={(itemValue, itemIndex) =>
                                 setTurno(itemValue)}>
                             <Picker.Item label={'Noturno'} value={'Noturno'} />
-                            <Picker.Item label={'Manhã'} value={'Manha'} />
+                            <Picker.Item label={'Manhã'} value={'Manhã'} />
                         </Picker>
                     )
                 }
