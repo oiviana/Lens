@@ -10,6 +10,7 @@ export default function Perfil() {
     const { userData } = useAuth();
     const [studentdata, setStudentdata] = useState([{}]);
     const [formationdata, setFormationdata] = useState([{}]);
+    const [currentformation, setCurrentformation] = useState();
     const [adress, setAdress] = useState([{}]);
     useEffect(() => {
         api.get(`studentprofile/${userData.id}`).then(response => {
@@ -24,7 +25,32 @@ export default function Perfil() {
             setAdress(response.data)
         }).catch(error => console.log("Erro: " + error))
 
+        api.get(`currentFormacao/${userData.id}`).then(response => {
+            setCurrentformation(response.data.Instformacao.nome)
+    
+        }).catch(error => console.log("Erro: " + error))
+
     }, [])
+
+    function yearOnly(date) {
+        var data = new Date(date),
+            anoF = data.getFullYear();
+        return anoF;
+
+    }
+    function currentFormation(date) {
+        var dateFormation = new Date(date);
+        var currentDate = new Date();
+        yearFormation = dateFormation.getFullYear();
+        currentYear = currentDate.getFullYear();
+        if(yearFormation > currentYear){
+            return 'Cursando'
+        }else{
+            return 'Concluído'
+        }
+   
+
+    }
 
     return (
         <ScrollView>
@@ -36,7 +62,7 @@ export default function Perfil() {
                 <View style={styles.userContent}>
                     <Text style={styles.userName}>{studentdata.nome} {studentdata.sobrenome}</Text>
                     <Text style={styles.userCourse}>{studentdata.Area?.nome_area}</Text>
-                    <Text style={styles.userUniversity}>FATEC Faculdade de Tecnologia de Bragança Paulista</Text>
+                    <Text style={styles.userUniversity}>{currentformation}</Text>
                     <View style={styles.userLocationGrid}>
                         <Entypo name='location-pin' size={22} color={'#7a7979'} style={{
                             position: 'absolute',
@@ -69,13 +95,13 @@ export default function Perfil() {
                             <View style={styles.content}>
                                 <Image
                                     style={styles.institutionImage}
-                                    source={{ uri: `http://192.168.187.70:3000/img/empresa/logo_fatec.png`, }}
+                                    source={{ uri: `${process.env.REACT_APP_BASE_URL}/img/inst/${item?.Instformacao?.imagem}`, }}
 
                                 />
                                 <View style={styles.formationContent}>
                                     <Text style={styles.formationInstitution}>{item?.Instformacao?.nome}</Text>
-                                    <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
-                                    <Text style={styles.formationYear}>2019 - 2022</Text>
+                                    <Text style={styles.formationStatus}>{item?.curso} - {currentFormation(item.data_termino)}</Text>
+                                    <Text style={styles.formationYear}>{yearOnly(item.data_inicio)} - {yearOnly(item.data_termino)}</Text>
                                 </View>
                             </View>
                             <Divider width={1} color='#DCDCDC' />

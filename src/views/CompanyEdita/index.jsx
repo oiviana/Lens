@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, Button } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, ToastAndroid} from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles';
-import cursos from '../../assets/cursos';
 import { Entypo, Feather } from '@expo/vector-icons';
 import { useAuth } from "../../hooks/useAuth";
 import api from '../../services/api';
@@ -11,40 +10,41 @@ import * as Permissions from 'expo-permissions'
 import * as ImagePicker from 'expo-image-picker'
 import { Picker } from '@react-native-picker/picker';
 import { Modalize } from 'react-native-modalize';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 export default function CompanyEdita() {
-    const [nome, setNome] = useState();
-    const [selectedArea, setSelectedArea] = useState();
     const { userData } = useAuth();
+    const [nome, setNome] = useState();
+    const [description, setDescription] = useState();
+    const [img, setImg] = useState();
+    const [atuacao, setAtuacao] = useState();
+    const [site, setSite] = useState();
+    const [selectedArea, setSelectedArea] = useState();
+
     const [avatar, setAvatar] = useState();
     const [companydata, setCompanydata] = useState([{}]);
-    const [addressdata, setAddressdata] = useState([{}]);
     const [areadata, setAreadata] = useState([{}]);
     const idArea = companydata.Area?.id
 
-    const [date, setDate] = useState(new Date());
-    const [mode, setMode] = useState('date');
-    const [show, setShow] = useState(false);
+    const [cep, setCep] = useState();
+    const [rua, setRua] = useState();
+    const [num, setNum] = useState();
+    const [bairro, setBairro] = useState();
+    const [cidade, setCidade] = useState();
+    const [uf, setUf] = useState();
 
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate || date;
-        setShow(false);
-        setDate(currentDate);
-        var tempDate = new Date(currentDate);
-        var formatDate = `${tempDate.getDate()}/0${(tempDate.getMonth() + 1)}/${tempDate.getFullYear()}`
-        setDate(formatDate);
-    };
 
-    const showMode = (currentMode) => {
-        setShow(true);
-        setMode(currentMode);
-    };
 
     useEffect(() => {
 
         api.get(`companyprofile/${userData.id}`).then(response => {
             setCompanydata(response.data)
+            setNome(response.data.nome)
+            setDescription(response.data.sobre)
+            setImg(response.data.imagem)
+            setSelectedArea(response.data.areaId)
+            setAtuacao(response.data.atuacao)
+            setSite(response.data.site)
         }).catch(error => console.log("Erro: " + error))
 
         api.get(`readAreas/${idArea}`).then(response => {
@@ -84,8 +84,32 @@ export default function CompanyEdita() {
         addresRef.current?.open();
 
         api.get(`/companyender/${userData.id}`).then(response => {
-            setAddressdata(response.data)
+            setCep(response.data.CEP);
+            setRua(response.data.logradouro);
+            setNum(JSON.stringify( response.data.numero));
+            setBairro(response.data.bairro);
+            setCidade(response.data.cidade);
+            setUf(response.data.UF);
         }).catch(error => console.log("Erro: " + error))
+    }
+    async function updateAddress() {
+        const response = await api.post(`/updatecompanyender/${userData.id}`, {
+            cep: cep,
+            logradouro: rua,
+            numero: parseInt(num),
+            bairro: bairro,
+            cidade: cidade,
+            uf: uf
+
+        })
+        if (typeof response == 'object') {
+            ToastAndroid.show("Endereço atualizado", ToastAndroid.LONG)
+            return
+        }
+        else {
+            ToastAndroid.show("Ocorreu um erro, não foi possível atualizar os dados", ToastAndroid.LONG)
+         
+        }
     }
 
 
@@ -97,7 +121,7 @@ export default function CompanyEdita() {
                         source={{
                             uri: avatar
                                 ? avatar.uri
-                                : `${process.env.REACT_APP_BASE_URL}/img/empresa/${companydata.imagem}`
+                                : `${process.env.REACT_APP_BASE_URL}/img/empresa/${img}`
                         }}
                         style={styles.imgEdit}
                     />
@@ -114,7 +138,7 @@ export default function CompanyEdita() {
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setNome(text) }}
-                    defaultValue={companydata.nome}
+                    defaultValue={nome}
                 />
                 <Text style={styles.nameLabel}>Área de interesse:</Text>
                 <Picker style={styles.pickerContainer}
@@ -130,8 +154,8 @@ export default function CompanyEdita() {
                     style={styles.inputdescription}
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
-                    onChangeText={(text) => { setNome(text) }}
-                    defaultValue={companydata.sobre}
+                    onChangeText={(text) => { setDescription(text) }}
+                    defaultValue={description}
                     multiline={true}
                 />
 
@@ -140,8 +164,8 @@ export default function CompanyEdita() {
                     style={styles.inputname}
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
-                    onChangeText={(text) => { setNome(text) }}
-                    defaultValue={companydata.atuacao}
+                    onChangeText={(text) => { setAtuacao(text) }}
+                    defaultValue={atuacao}
                 />
 
                 <Text style={styles.nameLabel}>Site:</Text>
@@ -149,8 +173,8 @@ export default function CompanyEdita() {
                     style={styles.inputname}
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
-                    onChangeText={(text) => { setNome(text) }}
-                    defaultValue={companydata.site}
+                    onChangeText={(text) => { setSite(text) }}
+                    defaultValue={site}
                 />
             </View>
 
@@ -181,8 +205,8 @@ export default function CompanyEdita() {
                             style={styles.inputname}
                             autoCorrect={false}
                             selectionColor={'#5155b4'}
-                            onChangeText={(text) => { setNome(text) }}
-                            defaultValue={addressdata.CEP}
+                            onChangeText={(text) => { setCep(text) }}
+                            defaultValue={cep}
                             keyboardType='numeric'
                         />
                         <Text style={styles.nameLabel}>Rua (Logradouro):</Text>
@@ -190,16 +214,16 @@ export default function CompanyEdita() {
                             style={styles.inputname}
                             autoCorrect={false}
                             selectionColor={'#5155b4'}
-                            onChangeText={(text) => { setNome(text) }}
-                            defaultValue={addressdata.logradouro}
+                            onChangeText={(text) => { setRua(text) }}
+                            defaultValue={rua}
                         />
                         <Text style={styles.nameLabel}>Bairro:</Text>
                         <TextInput
                             style={styles.inputname}
                             autoCorrect={false}
                             selectionColor={'#5155b4'}
-                            onChangeText={(text) => { setNome(text) }}
-                            defaultValue={addressdata.bairro}
+                            onChangeText={(text) => { setBairro(text) }}
+                            defaultValue={bairro}
                         />
                         <View style={styles.addresRow}>
                             <View style={styles.fieldSet}>
@@ -209,8 +233,8 @@ export default function CompanyEdita() {
                                     autoCorrect={false}
                                     selectionColor={'#5155b4'}
                                     keyboardType='numeric'
-                                    onChangeText={(text) => { setNome(text) }}
-                                    defaultValue={JSON.stringify(addressdata.numero)}
+                                    onChangeText={(text) => { setNum(text) }}
+                                    defaultValue={num}
                                 />
                             </View>
 
@@ -220,8 +244,8 @@ export default function CompanyEdita() {
                                     style={styles.inputrow}
                                     autoCorrect={false}
                                     selectionColor={'#5155b4'}
-                                    onChangeText={(text) => { setNome(text) }}
-                                    defaultValue={addressdata.UF}
+                                    onChangeText={(text) => { setUf(text) }}
+                                    defaultValue={uf}
                                 />
                             </View>
                         </View>
@@ -230,11 +254,11 @@ export default function CompanyEdita() {
                             style={styles.inputname}
                             autoCorrect={false}
                             selectionColor={'#5155b4'}
-                            onChangeText={(text) => { setNome(text) }}
-                            defaultValue={addressdata.cidade}
+                            onChangeText={(text) => { setCidade(text) }}
+                            defaultValue={cidade}
                         />
                         <TouchableOpacity style={styles.addresButton}
-                            onPress={() => { Login() }}>
+                            onPress={() => { updateAddress() }}>
                             <Text style={styles.textButton}>Atualizar</Text>
                         </TouchableOpacity>
                     </KeyboardAvoidingView>

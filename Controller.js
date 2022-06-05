@@ -6,19 +6,21 @@ const req = require('express/lib/request');
 
 const path = require('path')
 const multer = require('multer')
-const storage  = multer.diskStorage({
-    destination:(req, file, cb)=>{
-        cb(null,path.resolve(__dirname,'public','img'))
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.resolve(__dirname, 'public', 'img'))
     },
-    filename:(req, file, cb)=>{
+    filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname))
     }
 })
-const upload = multer({storage: storage,fileFilter:(req,file,cb) =>{
-    console.log("Mimetype",file.mimetype) 
-    cb(null,true)
+const upload = multer({
+    storage: storage, fileFilter: (req, file, cb) => {
+        console.log("Mimetype", file.mimetype)
+        cb(null, true)
 
-} })
+    }
+})
 // const uploadConfig = {
 
 // }
@@ -41,7 +43,7 @@ let candidatura = models.Candidatura
 let area = models.Area
 let empresa = models.Empresa
 
-app.post('/uploadImage',upload.single('avatar'), (req, res) =>{
+app.patch('/uploadImage', upload.single('avatar'), (req, res) => {
     res.send("Passou pelo Upload")
 
 });
@@ -49,12 +51,12 @@ app.post('/uploadImage',upload.single('avatar'), (req, res) =>{
 //AREA
 
 app.get('/readAreas/:id', (req, res) => {
-    const id =req.params['id']
+    const id = req.params['id']
     area.findAll({
-        where:{
+        where: {
             id: {
                 [Op.not]: id
-              }
+            }
         }
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
@@ -62,6 +64,15 @@ app.get('/readAreas/:id', (req, res) => {
 
 //AREA
 
+//INSTITUIÇÃO
+
+app.get('/readInstitutions/', (req, res) => {
+    const id = req.params['id']
+    instformacao.findAll({}).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+//INSTITUIÇÃO
 
 //VAGAS
 
@@ -79,9 +90,9 @@ app.get('/readVagas', (req, res) => {
 
 //Select Vagas por empresa
 app.get('/readVagasbycompany/:id', (req, res) => {
-    const id =req.params['id']
+    const id = req.params['id']
     vaga.findAll({
-        where:{
+        where: {
             empresaId: id
         }
     }).then(teste => res.send(teste))
@@ -120,8 +131,8 @@ app.post('/createCandidatura', async (req, res) => {
 
 app.get('/readCandidatura', (req, res) => {
     candidatura.findOne({
-        where: { vagaId: 4},
-        
+        where: { vagaId: 4 },
+
         include: [{
             model: estudante,
             attributes: ['id', 'nome']
@@ -130,7 +141,7 @@ app.get('/readCandidatura', (req, res) => {
             model: vaga,
             attributes: ['id', 'titulo']
         }
-    ]
+        ]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
 });
@@ -139,7 +150,7 @@ app.get('/checkCandidatura/:estId&:vagaId', (req, res) => {
     const estId = req.params['estId']
     const vagId = req.params['vagaId']
     candidatura.findOne({
-        where: { estudanteId:estId, vagaId:vagId }
+        where: { estudanteId: estId, vagaId: vagId }
 
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
@@ -158,8 +169,8 @@ app.post('/createEstudante', async (req, res) => {
         senha: req.body.password,
         RG: req.body.rg,
         CPF: req.body.cpf,
-        imagem:'http://localhost:3000/img/user.png',
-        areaId:0,
+        imagem: 'http://localhost:3000/img/user.png',
+        areaId: 0,
         createAt: new Date(),
         updatedAt: new Date()
     });
@@ -174,10 +185,10 @@ app.post('/createEstudante', async (req, res) => {
 
 app.get('/studentprofile/:id', (req, res) => {
     const id = req.params['id']
-    estudante.findByPk(id,{
+    estudante.findByPk(id, {
         include: [{
             model: area,
-            attributes: ['nome_area','id']
+            attributes: ['nome_area', 'id']
         }]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
@@ -192,9 +203,24 @@ app.post('/login', async (req, res) => {
         res.send(JSON.stringify('Credenciais incorretas'))
     } else {
         res.send(response);
-        console.log(response)
     }
 });
+
+app.patch('/updateStudent/:id', async (req, res) => {
+    const id = req.params['id']
+    console.log("passou aqui no update")
+    let updateStudent = await estudante.findByPk(id).then((response) => {
+
+        response.nome = req.body.nome;
+        response.sobre = req.body.description;
+        response.areaId = req.body.area
+
+        response.save();
+        console.log("response", response)
+    }).catch(error => console.log(error))
+    res.send(updateStudent)
+});
+
 // ESTUDANTE
 
 
@@ -202,9 +228,41 @@ app.post('/login', async (req, res) => {
 app.get('/studentender/:id', (req, res) => {
     const id = req.params['id']
     enderecoestudante.findOne({
-        where: { estudanteId: id}
+        where: { estudanteId: id }
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
+});
+
+app.put('/updatestudentender/:id', async (req, res) => {
+    const id = req.params['id']
+
+    let updateCompanyEnder = await enderecoestudante.findOne({
+        where: { estudanteId: id }
+    })
+    if (updateCompanyEnder === null) {
+        await enderecoestudante.create({
+            CEP: req.body.cep,
+            logradouro: req.body.logradouro,
+            numero: req.body.numero,
+            bairro: req.body.bairro,
+            UF: req.body.uf,
+            cidade: req.body.cidade,
+            estudanteId: id,
+            createAt: new Date(),
+            updatedAt: new Date()
+        });
+        res.send("Endereço Criado")
+    } else {
+        updateCompanyEnder.CEP = req.body.cep;
+        updateCompanyEnder.logradouro = req.body.logradouro;
+        updateCompanyEnder.numero = req.body.numero;
+        updateCompanyEnder.bairro = req.body.bairro;
+        updateCompanyEnder.UF = req.body.uf;
+        updateCompanyEnder.cidade = req.body.cidade;
+        updateCompanyEnder.save();
+        res.send(updateCompanyEnder)
+    }
+
 });
 
 // ENDEREÇO ESTUDANTE
@@ -214,9 +272,44 @@ app.get('/studentender/:id', (req, res) => {
 app.get('/companyender/:id', (req, res) => {
     const id = req.params['id']
     enderecoempresa.findOne({
-        where: { empresaId: id}
+        where: { empresaId: id }
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
+});
+
+app.post('/updatecompanyender/:id', async (req, res) => {
+    const id = req.params['id']
+
+    let updateCompanyEnder = await enderecoempresa.findOne({
+        where: { empresaId: id }
+    })
+    if (updateCompanyEnder === null) {
+        await enderecoempresa.create({
+            CEP: req.body.cep,
+            logradouro: req.body.logradouro,
+            numero: req.body.numero,
+            bairro: req.body.bairro,
+            UF: req.body.uf,
+            cidade: req.body.cidade,
+            empresaId: id,
+            createAt: new Date(),
+            updatedAt: new Date()
+        });
+        res.send("Endereço Criado")
+    } else {
+        updateCompanyEnder.CEP = req.body.cep;
+        updateCompanyEnder.logradouro = req.body.logradouro;
+        updateCompanyEnder.numero = req.body.numero;
+        updateCompanyEnder.bairro = req.body.bairro;
+        updateCompanyEnder.UF = req.body.uf;
+        updateCompanyEnder.cidade = req.body.cidade;
+
+        updateCompanyEnder.save();
+        res.send(updateCompanyEnder)
+    }
+
+
+
 });
 
 
@@ -224,15 +317,52 @@ app.get('/companyender/:id', (req, res) => {
 
 // FORMAÇÕES
 
+app.post('/createFormation', async (req, res) => {
+    await formacao.create({
+        curso: req.body.curso,
+        data_inicio: req.body.data_inicio,
+        data_termino: req.body.data_termino,
+        periodo: req.body.periodo,
+        estudanteId: req.body.estudanteId,
+        instformacaoId: req.body.instformacaoId,
+        createAt: new Date(),
+        updatedAt: new Date()
+    }).then(response => res.send(response))
+        .catch((error) => {
+            console.log(error)
+            res.send("erro")
+        })
+
+});
+
 app.get('/readFormacao/:id', (req, res) => {
     const id = req.params['id']
     formacao.findAll({
-        where: { estudanteId: id}, 
+        where: { estudanteId: id },
+        order: [
+            ['data_termino', 'DESC']
+        ],
         include: [{
             model: instformacao,
-            attributes: ['id', 'nome','imagem']
+            attributes: ['id', 'nome', 'imagem']
         }
-    ]
+        ]
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+app.get('/currentFormacao/:id', (req, res) => {
+    const id = req.params['id']
+    formacao.findOne({
+        where: { estudanteId: id },
+        order: [
+            ['data_termino', 'DESC']
+        ],
+        include: [{
+            model: instformacao,
+            attributes: ['nome']
+        }
+        ]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
 });
@@ -250,16 +380,16 @@ app.post('/logincompany', async (req, res) => {
         res.send(JSON.stringify('Credenciais incorretas'))
     } else {
         res.send(response);
-        console.log(response)
+        // console.log(response)
     }
 });
 
 app.get('/companyprofile/:id', (req, res) => {
     const id = req.params['id']
-    empresa.findByPk(id,{
+    empresa.findByPk(id, {
         include: [{
             model: area,
-            attributes: ['nome_area','id']
+            attributes: ['nome_area', 'id']
         }]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
@@ -280,15 +410,6 @@ app.get('/companyprofile/:id', (req, res) => {
 //     let readArea = await area.findAll()
 //     res.send(readArea)
 //     });
-
-// app.get('/updateArea', async (req, res) =>{
-//     let updateArea = await area.findByPk(4).then((response)=>{
-//         response.nome_area = 'direitinho';
-//         response.save();
-//     })
-//     res.send(updateArea)
-//     });    
-
 
 
 let port = process.env.PORT || 3000;

@@ -48,7 +48,7 @@ export default function Home() {
     console.log({data})
 
 
-    api.post(`uploadImage`, data).then(res => {
+    api.patch(`uploadImage`, data).then(res => {
   }).catch(error => console.log("Erro: " + error))
 
   }
@@ -57,9 +57,7 @@ export default function Home() {
 
     <View style={styles.container}>
       <StatusBar backgroundColor={'white'} barStyle='dark-content' />
-      <Text>
-       ip:{}
-      </Text>
+
       <TouchableOpacity onPress={() => signOut()} style={{
         backgroundColor: 'pink',
         width: 100,
