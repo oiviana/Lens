@@ -5,47 +5,23 @@ import { Divider } from 'react-native-elements';
 import api from '../../services/api';
 import { AuthContext } from '../../contexts/auth';
 import { Picker } from '@react-native-picker/picker';
+import { Entypo, Feather } from '@expo/vector-icons';
 
-export default function CompanyEditVaga({ route }) {
+export default function CompanyEditVaga({navigation,route}) {
     const { userData } = useContext(AuthContext);
     const idvaga = route.params.vagaid
-    const iduser = userData.id
     const [vagainfo, setVagainfo] = useState([{}]);
     const [status, setStatus] = useState();
-    const [buttonCand, setbuttonCand] = useState(false);
     const [turno, setTurno] = useState();
 
     useEffect(() => {
         api.get(`aboutVaga/${idvaga}`).then(response => {
             setVagainfo(response.data)
         }).catch(error => console.log("Erro: " + error))
+  
 
-        api.get(`checkCandidatura/${iduser}&${idvaga}`).then(response => {
+    }, [])
 
-            if (typeof response.data == 'object') { // Se trazer um objeto, já há uma candidatura
-            } else {
-                setbuttonCand(true)
-            }
-        }).catch(error => console.log("Erro: " + error))
-
-    }, [buttonCand])
-
-    async function Candidatura() {
-        const response = await api.post('/createCandidatura', {
-            estudanteId: iduser,
-            vagaId: idvaga
-        })
-        console.log(response.data)
-        if (response.data === "erro") {
-            ToastAndroid.show("Ocorreu um erro", ToastAndroid.LONG)
-        }
-        else {
-            ToastAndroid.show("Agora você é um candidato!", ToastAndroid.LONG)
-            setbuttonCand(true)
-
-        }
-
-    }
 
     return (
         <View style={styles.container}>
@@ -62,7 +38,7 @@ export default function CompanyEditVaga({ route }) {
 
                 <Text style={styles.nameLabel}>Descrição:</Text>
                 <TextInput
-                    style={styles. inputdescription}
+                    style={styles.inputdescription}
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { }}
@@ -113,12 +89,24 @@ export default function CompanyEditVaga({ route }) {
                         </Picker>
                     )
                 }
+                
+                <Divider width={3} color='#DCDCDC' />
+                <TouchableOpacity style={styles.buttonCands} onPress={() => {navigation.navigate('Candidatos', { vagaid: vagainfo.id }) }}>
+                    <Feather name='crosshair' size={35} color={'#5f5f63'} style={{
+                        marginLeft: 30
+                    }} />
+                    <Text style={styles.nameLabel}>Veja quem se candidatou</Text>
+                </TouchableOpacity>
+                
+                <Divider width={3} color='#DCDCDC' />
 
-                   <TouchableOpacity style={styles.candidaturaButton}
-                        onPress={() => { Candidatura() }}>
-                        <Text style={styles.textButton}>Atualizar</Text>
-                    </TouchableOpacity>
-            
+                <TouchableOpacity style={styles.candidaturaButton}
+                    onPress={() => { Candidatura() }}>
+                    <Text style={styles.textButton}>Atualizar</Text>
+                </TouchableOpacity>
+
+
+
             </ScrollView>
         </View>
     );

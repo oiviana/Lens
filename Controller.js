@@ -113,6 +113,38 @@ app.get('/aboutVaga/:id', (req, res) => {
         .catch(error => console.log(error))
 });
 
+app.post('/createVaga', async (req, res) => {
+    await vaga.create({
+        titulo: req.body.titulo,
+        descricao: req.body.descricao,
+        periodo: req.body.periodo,
+        status: req.body.status,
+        empresaId: req.body.empresaId,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }).then(response => res.send(response))
+        .catch((error) => {
+            console.log(error)
+            res.send("erro")
+        })
+
+});
+
+app.patch('/updateVaga/:id', async (req, res) => {
+    const id = req.params['id'];
+    let updateVaga = await vaga.findByPk(id).then((response) => {
+
+        response.titulo = req.body.titulo;
+        response.descricao = req.body.descricao;
+        response.periodo = req.body.periodo;
+        response.status = req.body.status
+        response.save();
+        console.log("response", response)
+    }).catch(error => console.log(error))
+    res.send(updateVaga)
+});
+
+
 //VAGAS
 
 
@@ -123,7 +155,7 @@ app.post('/createCandidatura', async (req, res) => {
         status: "Candidato",
         estudanteId: req.body.estudanteId,
         vagaId: req.body.vagaId,
-        createAt: new Date(),
+        createdAt: new Date(),
         updatedAt: new Date()
     });
     res.send('Candidatura realizada')
@@ -144,7 +176,25 @@ app.get('/readCandidatura', (req, res) => {
         ]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
+});app.get('/readCandidaturas/:vagaId', (req, res) => {
+    const vagId = req.params['vagaId']
+    candidatura.findAll({
+        where: { vagaId: vagId },
+
+        include: [{
+            model: estudante,
+            attributes: ['id', 'nome','imagem']
+        },
+        {
+            model: vaga,
+            attributes: ['id', 'titulo']
+        }
+        ]
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
 });
+
+
 
 app.get('/checkCandidatura/:estId&:vagaId', (req, res) => {
     const estId = req.params['estId']
@@ -171,7 +221,7 @@ app.post('/createEstudante', async (req, res) => {
         CPF: req.body.cpf,
         imagem: 'http://localhost:3000/img/user.png',
         areaId: 0,
-        createAt: new Date(),
+        createdAt: new Date(),
         updatedAt: new Date()
     });
     if (createEstudante != null) {
@@ -207,14 +257,12 @@ app.post('/login', async (req, res) => {
 });
 
 app.patch('/updateStudent/:id', async (req, res) => {
-    const id = req.params['id']
-    console.log("passou aqui no update")
+    const id = req.params['id'];
     let updateStudent = await estudante.findByPk(id).then((response) => {
 
         response.nome = req.body.nome;
         response.sobre = req.body.description;
         response.areaId = req.body.area
-
         response.save();
         console.log("response", response)
     }).catch(error => console.log(error))
@@ -248,7 +296,7 @@ app.put('/updatestudentender/:id', async (req, res) => {
             UF: req.body.uf,
             cidade: req.body.cidade,
             estudanteId: id,
-            createAt: new Date(),
+            createdAt: new Date(),
             updatedAt: new Date()
         });
         res.send("Endereço Criado")
@@ -292,7 +340,7 @@ app.post('/updatecompanyender/:id', async (req, res) => {
             UF: req.body.uf,
             cidade: req.body.cidade,
             empresaId: id,
-            createAt: new Date(),
+            createdAt: new Date(),
             updatedAt: new Date()
         });
         res.send("Endereço Criado")
@@ -325,7 +373,7 @@ app.post('/createFormation', async (req, res) => {
         periodo: req.body.periodo,
         estudanteId: req.body.estudanteId,
         instformacaoId: req.body.instformacaoId,
-        createAt: new Date(),
+        createdAt: new Date(),
         updatedAt: new Date()
     }).then(response => res.send(response))
         .catch((error) => {
@@ -394,6 +442,21 @@ app.get('/companyprofile/:id', (req, res) => {
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
 });
+app.patch('/updateCompany/:id', async (req, res) => {
+    const id = req.params['id'];
+    let updateCompany = await empresa.findByPk(id).then((response) => {
+
+        response.nome = req.body.nome;
+        response.sobre = req.body.description;
+        response.areaId = req.body.area;
+        response.atuacao = req.body.atuacao;
+        response.site = req.body.site
+        response.save();
+        console.log("response", response)
+    }).catch(error => console.log(error))
+    res.send(updateCompany)
+});
+
 
 
 

@@ -30,12 +30,12 @@ export default function CompanyVagas({ navigation }) {
 
     function formatDate(date) {
       var data = new Date(date),
-        dia = (data.getDate() + 1),
+        dia = (data.getDate()),
         diaF = (dia.toString().length == 1) ? '0' + dia : dia,
         mes = (data.getMonth() + 1),
         mesF = (mes.toString().length == 1) ? '0' + mes : mes,
         anoF = data.getFullYear();
-      return diaF + "/" + mesF + "/" + anoF;
+      return (diaF) + "/" + mesF + "/" + anoF;
 
     }
     return (

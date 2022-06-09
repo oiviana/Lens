@@ -27,6 +27,8 @@ export default function VagaInfo({ route }) {
 
     }, [buttonCand])
 
+
+
     async function Candidatura() {
         const response = await api.post('/createCandidatura', {
             estudanteId: iduser,
@@ -38,11 +40,20 @@ export default function VagaInfo({ route }) {
         }
         else {
             ToastAndroid.show("Agora você é um candidato!", ToastAndroid.LONG)
-            setbuttonCand(true)
+            setbuttonCand(false)
 
         }
 
     }
+    function formatDate(date) {
+        var data = new Date(date),
+          dia = (data.getDate()),
+          diaF = (dia.toString().length == 1) ? '0' + dia : dia,
+          mes = (data.getMonth() + 1),
+          mesF = (mes.toString().length == 1) ? '0' + mes : mes,
+          anoF = data.getFullYear();
+        return (diaF) + "/" + mesF + "/" + anoF;
+      }
 
     return (
         <View>
@@ -57,7 +68,7 @@ export default function VagaInfo({ route }) {
             <View style={styles.dadosVaga}>
                 <Text style={{ fontWeight: 'bold', fontSize: 17, paddingBottom: 3 }}>{vagainfo.Empresa?.nome}</Text>
                 <Text style={styles.dadoVaga}>Período: {vagainfo.periodo}</Text>
-                <Text style={styles.dadoVaga}>Anunciada em {vagainfo?.data?.split('-').reverse().join('/')}</Text>
+                <Text style={styles.dadoVaga}>Anunciada em {formatDate(vagainfo.createdAt)}</Text>
                 <Text style={styles.dadoVaga}>30 Candidaturas</Text>
             </View>
 
@@ -82,15 +93,18 @@ export default function VagaInfo({ route }) {
 
             <Divider width={3} color='#DCDCDC' />
 
-            {buttonCand ?
+            {buttonCand === true ? (
                 <TouchableOpacity style={styles.candidaturaButton}
                     onPress={() => { Candidatura() }}>
                     <Text style={styles.textButton}>Candidatar-se</Text>
                 </TouchableOpacity>
-                :
+            )
+                :(
                 <View style={styles.candidatoButton}>
-                    <Text>Candidato!</Text>
-                </View>}
+                    <Text style={styles.textButton}>Candidato!</Text>
+                </View>
+                )}
+                
         </ScrollView>
         </View>
     );

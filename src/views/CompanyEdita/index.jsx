@@ -92,6 +92,25 @@ export default function CompanyEdita() {
             setUf(response.data.UF);
         }).catch(error => console.log("Erro: " + error))
     }
+
+    async function updateCompany() {
+        const response = await api.patch(`/updateCompany/${userData.id}`, {
+            nome: nome,
+            description: description,
+            area: selectedArea,
+            site: site,
+            atuacao: atuacao
+
+        })
+        if (typeof response == 'object') {
+            ToastAndroid.show("Dados Atualizados", ToastAndroid.LONG)
+            return
+        }
+        else {
+            ToastAndroid.show("Ocorreu um erro, não foi possível atualizar os dados", ToastAndroid.LONG)
+        }
+    }
+
     async function updateAddress() {
         const response = await api.post(`/updatecompanyender/${userData.id}`, {
             cep: cep,

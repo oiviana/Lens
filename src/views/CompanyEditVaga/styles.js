@@ -43,6 +43,11 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         marginBottom:20,
     },
+    buttonCands:{
+        flexDirection:'row',
+        paddingTop:30,
+        paddingBottom:30
+    },
 
 
     candidaturaButton:{
