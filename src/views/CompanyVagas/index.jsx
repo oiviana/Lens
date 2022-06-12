@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, TouchableOpacity, View, FlatList, KeyboardAvoidingView, TextInput } from 'react-native';
+import { Text, TouchableOpacity, View, FlatList, KeyboardAvoidingView, TextInput, ToastAndroid } from 'react-native';
 import { styles } from './styles';
 import { Entypo, Feather } from '@expo/vector-icons';
 import { Modalize } from 'react-native-modalize';
@@ -11,7 +11,10 @@ import { Picker } from '@react-native-picker/picker';
 export default function CompanyVagas({ navigation }) {
   const { userData } = useAuth();
   const [vagas, setVagas] = useState([{}]);
-  const [turno, setTurno] = useState();
+
+  const [titulo, setTitulo] = useState();
+  const [descricao, setDescricao] = useState();
+  const [turno, setTurno] = useState("Manhã");
 
   const vacancyRef = useRef(null); //ref modal de formações
   function OpenVacancyModal() {
@@ -19,11 +22,37 @@ export default function CompanyVagas({ navigation }) {
   }
 
   useEffect(() => {
-    api.get(`/readVagasbycompany/${userData.id}`).then(response => {
-      setVagas(response.data)
-    }).catch(error => console.log("Texto depois" + error))
+    const refresh = navigation.addListener('focus', () => {
+      findVagas();
+    }); return refresh;
 
-  }, [])
+  }, [navigation])
+
+  async function newVacancy() {
+    const response = await api.post('/createVaga', {
+        titulo: titulo,
+        descricao: descricao,
+        status: "Ativa",
+        periodo: turno,
+        empresaId: userData.id
+    })
+    if (response.data === "erro") {
+        ToastAndroid.show("Ocorreu algum erro", ToastAndroid.LONG)
+        return
+    }
+    else {
+        ToastAndroid.show("Vaga lançada", ToastAndroid.LONG)
+        findVagas();
+        vacancyRef.current?.close();
+    }
+
+}
+
+function findVagas(){
+  api.get(`/readVagasbycompany/${userData.id}`).then(response => {
+    setVagas(response.data)
+  }).catch(error => console.log("Texto depois" + error))
+}
 
 
   function getVagas({ item }) {
@@ -94,16 +123,14 @@ export default function CompanyVagas({ navigation }) {
             style={styles.inputname}
             autoCorrect={false}
             selectionColor={'#5155b4'}
-            onChangeText={() => { }}
-            defaultValue={"oi"}
+            onChangeText={(text) => {setTitulo(text) }}
           />
           <Text style={styles.nameLabel}>Descrição:</Text>
           <TextInput
             style={styles.inputdescription}
             autoCorrect={false}
             selectionColor={'#5155b4'}
-            onChangeText={() => { }}
-            defaultValue={"oi"}
+            onChangeText={(text) => { setDescricao(text)}}
             multiline={true}
           />
           <Text style={styles.nameLabel}>Turno:</Text>
@@ -116,7 +143,7 @@ export default function CompanyVagas({ navigation }) {
           </Picker>
 
           <TouchableOpacity style={styles.addresButton}
-            onPress={() => { }}>
+            onPress={() => newVacancy()}>
             <Text style={styles.textButton}>Lançar</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>

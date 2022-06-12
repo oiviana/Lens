@@ -137,12 +137,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#c5c5c7',
         marginLeft: 5,
-        marginRight: 20
+        marginRight: 14
     },
 
     formationContent: {
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
+
+        width:'64%'
     },
     formationInstitution: {
         marginBottom: 5,
@@ -183,6 +185,26 @@ const styles = StyleSheet.create({
         marginBottom: 30,
         marginTop: 30,
         shadowColor: "#000",
+    },
+    trashButton:{
+   
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    contentAtividades:{
+        width:'82%',
+        marginLeft: 25,
+    },
+    atividadetitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        padding: 2,
+        paddingBottom:8
+    },
+    atividadeContent: {
+        fontSize: 16,
+        padding: 2,
+        paddingBottom:12
     },
 });
 export { styles }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, ToastAndroid } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, ToastAndroid, Alert } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles';
 import cursos from '../../assets/cursos';
@@ -13,7 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Modalize } from 'react-native-modalize';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-export default function EditaPerfil() {
+export default function EditaPerfil({ navigation }) {
     const { userData } = useAuth();
     const [nome, setNome] = useState();
     const [description, setDescription] = useState();
@@ -22,7 +22,7 @@ export default function EditaPerfil() {
     const [cep, setCep] = useState();
     const [rua, setRua] = useState();
     const [num, setNum] = useState();
-  
+
     const [bairro, setBairro] = useState();
     const [cidade, setCidade] = useState();
     const [uf, setUf] = useState();
@@ -38,6 +38,7 @@ export default function EditaPerfil() {
     const [formationdata, setFormationdata] = useState([{}]);
     const [institutiondata, setInstitutiondata] = useState([{}]);
     const [areadata, setAreadata] = useState([{}]);
+    const [atividadedata, setAtividadedata] = useState([{}]);
 
     const idArea = studentdata.Area?.id
 
@@ -60,10 +61,19 @@ export default function EditaPerfil() {
             setInstitutiondata(response.data)
         }).catch(error => console.log("Erro: " + error))
 
+        api.get(`readAtividade/${userData.id}`).then(response => {
+            setAtividadedata(response.data)
+        }).catch(error => console.log("Erro: " + error))
+
+        getFormations();
+
+    }, [idArea])
+
+    async function getFormations(){
         api.get(`readFormacao/${userData.id}`).then(response => {
             setFormationdata(response.data)
         }).catch(error => console.log("Erro: " + error))
-    }, [idArea])
+    }
 
 
     async function imagePickerCall() {
@@ -102,7 +112,7 @@ export default function EditaPerfil() {
             setBairro(response.data.bairro);
             setCidade(response.data.cidade);
             setUf(response.data.UF);
-    
+
         }).catch(error => console.log("Erro: " + error))
     }
 
@@ -140,6 +150,7 @@ export default function EditaPerfil() {
         })
         if (typeof response == 'object') {
             ToastAndroid.show("Dados Atualizados", ToastAndroid.LONG)
+            navigation.navigate('Perfil')
             return
         }
         else {
@@ -162,7 +173,7 @@ export default function EditaPerfil() {
         }
         else {
             ToastAndroid.show("Ocorreu um erro, não foi possível atualizar os dados", ToastAndroid.LONG)
-         
+
         }
     }
 
@@ -182,6 +193,7 @@ export default function EditaPerfil() {
         else {
             ToastAndroid.show("Formação Adicionada", ToastAndroid.LONG)
             formationRef.current?.close();
+            navigation.navigate('Perfil')
         }
 
     }
@@ -192,6 +204,35 @@ export default function EditaPerfil() {
         return anoF;
 
     }
+
+
+    const delFormationAlert = (id) =>
+        Alert.alert(
+            "Deseja excluir essa formação?",
+            "",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Excluir", onPress: () => { delFormation(id) } }
+            ]
+        );
+        async function delFormation(id) {
+            const response = await api.delete(`/deleteFormation/${id}`)
+            console.log("response: ",response.data)
+            if (response.data == 'deletado') {
+                ToastAndroid.show("Formação Deletada", ToastAndroid.LONG)
+                getFormations();
+                return
+            }
+            else {
+                ToastAndroid.show("Ocorreu um erro, não foi possível excluir", ToastAndroid.LONG)
+    
+            }
+        }
+    
 
     return (
         <ScrollView>
@@ -258,7 +299,7 @@ export default function EditaPerfil() {
                 {formationdata.map((item, index) => {
 
                     return (
-                        <TouchableOpacity key={index} style={styles.formationButton}>
+                        <View key={index} style={styles.formationButton}>
                             <View style={styles.content}>
                                 <Image
                                     style={styles.institutionImage}
@@ -269,8 +310,13 @@ export default function EditaPerfil() {
                                     <Text style={styles.formationStatus}>{item?.curso} - Cursando</Text>
                                     <Text style={styles.formationYear}>{yearOnly(item.data_inicio)} - {yearOnly(item.data_termino)}</Text>
                                 </View>
+                                <TouchableOpacity style={styles.trashButton} onPress={() => { delFormationAlert(item?.id) }}>
+                                    <Feather name='trash-2' size={32} color={'#ba252a'} style={{
+                                        marginLeft: 3
+                                    }} />
+                                </TouchableOpacity>
                             </View>
-                        </TouchableOpacity>
+                        </View>
                     );
                 })}
                 <TouchableOpacity style={styles.addformationButton} onPress={OpenaddFormationModal}>
@@ -278,6 +324,38 @@ export default function EditaPerfil() {
                         marginLeft: 105
                     }} />
                     <Text style={{ fontSize: 17, paddingLeft: 8, paddingTop: 1 }}>Adicionar formação</Text>
+
+                </TouchableOpacity>
+            </View>
+
+            <View style={styles.formationContainers}>
+                <Text style={styles.nameLabel}>Atividades Extracurriculares</Text>
+
+                {atividadedata.map((item, index) => {
+
+                    return (
+                        <View key={index}>
+                        <View style={styles.content} >
+                            <View style={styles.contentAtividades}>
+                                <Text style={styles.atividadetitle}>{item.titulo}</Text>
+                                <Text style={styles.atividadeContent}>{item.arquivo}</Text>
+                                <Text style={styles.formationYear}>{formatDate(item.createdAt)} - {item.tipo}</Text>
+                            </View>
+                            <TouchableOpacity style={styles.trashButton} onPress={() => { delFormationAlert(item?.id) }}>
+                                    <Feather name='trash-2' size={32} color={'#ba252a'} style={{
+                                        marginLeft: 3
+                                    }} />
+                                </TouchableOpacity>
+                        </View>
+                    </View>
+                    );
+
+                })}
+                <TouchableOpacity style={styles.addformationButton} onPress={OpenaddFormationModal}>
+                    <Feather name='plus-circle' size={25} color={'#5f5f63'} style={{
+                        marginLeft: 105
+                    }} />
+                    <Text style={{ fontSize: 17, paddingLeft: 8, paddingTop: 1 }}>Adicionar atividade</Text>
 
                 </TouchableOpacity>
             </View>
@@ -425,8 +503,9 @@ export default function EditaPerfil() {
                         <Text style={styles.nameLabel}>Instituição:</Text>
                         <Picker style={styles.pickerContainer}
                             selectedValue={selectedInst}
-                            onValueChange={(itemValue, itemIndex) =>{
-                                setSelectedInst(itemValue)}}>
+                            onValueChange={(itemValue, itemIndex) => {
+                                setSelectedInst(itemValue)
+                            }}>
                             {institutiondata.map((item, index) => <Picker.Item label={item.nome} value={item.id} key={index} />)}
                         </Picker>
 

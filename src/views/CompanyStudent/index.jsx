@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, ToastAndroid } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles'
 import { Entypo } from '@expo/vector-icons';
@@ -9,6 +9,7 @@ export default function CompanyStudent({ route }) {
     const [studentdata, setStudentdata] = useState([{}]);
     const [formationdata, setFormationdata] = useState([{}]);
     const [currentformation, setCurrentformation] = useState();
+    const [candidate, setCandidate] = useState();
     const [adress, setAdress] = useState([{}]);
     const idStudent = route.params.studentId
     useEffect(() => {
@@ -26,6 +27,15 @@ export default function CompanyStudent({ route }) {
 
         api.get(`currentFormacao/${idStudent}`).then(response => {
             setCurrentformation(response.data.Instformacao.nome)
+
+        }).catch(error => console.log("Erro: " + error))
+
+        api.get(`checkCandCompany/${idStudent}`).then(response => {
+
+            if (response.data === 'Candidato') {
+                console.log(response.data)
+                setCandidate(true)
+            } else { setCandidate(false) }
 
         }).catch(error => console.log("Erro: " + error))
 
@@ -109,12 +119,19 @@ export default function CompanyStudent({ route }) {
                 })}
             </View>
 
-            <Divider width={3} color='#DCDCDC' style={{paddingTop:22}} />
+            <Divider width={3} color='#DCDCDC' style={{ paddingTop: 22 }} />
+            {candidate === true ? (
+                <TouchableOpacity style={styles.selectedButton}
+                    onPress={() => { selectStundent() }}>
+                    <Text style={styles.textButton}>Selecionar</Text>
+                </TouchableOpacity>
+            )
+                : (
+                    <View style={styles. selectedButton2}>
+                        <Text style={styles.textButton}>Selecionado!</Text>
+                    </View>
+                )}
 
-            <TouchableOpacity style={styles.selectedButton}
-                onPress={() => { Candidatura() }}>
-                <Text style={styles.textButton}>Selecionar</Text>
-            </TouchableOpacity>
         </ScrollView>
     );
 }

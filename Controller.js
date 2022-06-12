@@ -42,9 +42,11 @@ let vaga = models.Vaga
 let candidatura = models.Candidatura
 let area = models.Area
 let empresa = models.Empresa
+let atividade = models.Certificado
 
-app.patch('/uploadImage', upload.single('avatar'), (req, res) => {
-    res.send("Passou pelo Upload")
+app.post('/uploadImage', upload.single('avatar'), (req, res) => {
+    console.log("_parts: ",req.body)
+    res.end()
 
 });
 
@@ -55,7 +57,7 @@ app.get('/readAreas/:id', (req, res) => {
     area.findAll({
         where: {
             id: {
-                [Op.not]: id
+                [Op.not]: id 
             }
         }
     }).then(teste => res.send(teste))
@@ -82,7 +84,10 @@ app.get('/readVagas', (req, res) => {
         include: [{
             model: empresa,
             attributes: ['id', 'nome', 'sobre', 'imagem']
-        }]
+        }],
+        where: {
+            status: "Ativa"
+        }
 
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
@@ -96,6 +101,21 @@ app.get('/readVagasbycompany/:id', (req, res) => {
             empresaId: id
         }
     }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+app.delete('/deleteVaga/:id', (req, res) => {
+    const id = req.params['id']
+    candidatura.destroy({
+        where:{
+            vagaId:id
+        }
+    });
+    vaga.destroy({
+        where: {
+           id: id
+        }
+    }).then(() => res.send("deletado"))
         .catch(error => console.log(error))
 });
 
@@ -176,7 +196,9 @@ app.get('/readCandidatura', (req, res) => {
         ]
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
-});app.get('/readCandidaturas/:vagaId', (req, res) => {
+});
+
+app.get('/readCandidaturas/:vagaId', (req, res) => {
     const vagId = req.params['vagaId']
     candidatura.findAll({
         where: { vagaId: vagId },
@@ -205,6 +227,22 @@ app.get('/checkCandidatura/:estId&:vagaId', (req, res) => {
     }).then(teste => res.send(teste))
         .catch(error => console.log(error))
 });
+
+app.get('/checkCandCompany/:id', (req, res) => {
+const Id = req.params['id']
+   candidatura.findOne({
+        where: { status: "Candidato", estudanteId:Id},
+        include: [{
+            model: estudante,
+            attributes: ['id', 'nome','email']
+        }]
+    }).then((response)=>{
+        if(response != null){
+            res.send("Candidato")
+        }else{res.send("Selecionado")}
+    })
+
+});
 //CANDIDATURAS
 
 
@@ -219,8 +257,8 @@ app.post('/createEstudante', async (req, res) => {
         senha: req.body.password,
         RG: req.body.rg,
         CPF: req.body.cpf,
-        imagem: 'http://localhost:3000/img/user.png',
-        areaId: 0,
+        imagem: 'user.png',
+        areaId: 1,
         createdAt: new Date(),
         updatedAt: new Date()
     });
@@ -415,9 +453,34 @@ app.get('/currentFormacao/:id', (req, res) => {
         .catch(error => console.log(error))
 });
 
+app.delete('/deleteFormation/:id', (req, res) => {
+    const id = req.params['id']
+    formacao.destroy({
+        where:{
+            id:id
+        }
+    }).then(() => res.send("deletado"))
+        .catch(error => console.log(error))
+});
+
 
 // FORMAÇÕES
 
+//ATIVIDADES
+
+app.get('/readAtividade/:id', (req, res) => {
+    const id = req.params['id']
+    atividade.findAll({
+        where: { estudanteId: id },
+        order: [
+            ['data_emissao', 'DESC']
+        ]
+    }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+
+//ATIVIDADES
 
 //EMPRESA
 app.post('/logincompany', async (req, res) => {

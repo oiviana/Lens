@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CompanyHomeNavigator from "./CompanyHomeNavigator";
 import CompanyProfileNavigator from "./CompanyProfileNavigator";
 import CompanyVacancyNavigator from "./CompanyVacancyNavigator";
+import CompanyNotificationNavigator from "./CompanyNotificationNavigator";
 import { Entypo, Feather } from '@expo/vector-icons';
 
 
@@ -41,6 +42,15 @@ export default function CompanyMain() {
                 options={{
                     tabBarIcon: ({ size, color }) => (
                         <Feather name="briefcase" size={size} color={color} />
+                    )
+                }}
+            />
+            <Tab.Screen
+                name="NotifTab"
+                component={CompanyNotificationNavigator}
+                options={{
+                    tabBarIcon: ({ size, color }) => (
+                        <Feather name="bell" size={size} color={color} />
                     )
                 }}
             />

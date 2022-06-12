@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, ScrollView, Image,TouchableOpacity  } from 'react-native';
+import { Text, View, ScrollView, Image,TouchableOpacity, Alert  } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles'
 import { Entypo, Feather } from '@expo/vector-icons';
@@ -8,11 +8,12 @@ import api from '../../services/api';
 import * as Linking from 'expo-linking';
 
 
-export default function CompanyPerfil() {
-    const { userData } = useAuth();
+export default function CompanyPerfil({navigation}) {
+    const { userData, signOut } = useAuth();
     const [companydata, setCompanydata] = useState([{}]);
     const [adress, setAdress] = useState([{}]);
     useEffect(() => {
+        const refresh = navigation.addListener('focus', () => {
         api.get(`companyprofile/${userData.id}`).then(response => {
             setCompanydata(response.data)
         }).catch(error => console.log("Erro: " + error))
@@ -20,9 +21,22 @@ export default function CompanyPerfil() {
         api.get(`companyender/${userData.id}`).then(response => {
             setAdress(response.data)
         }).catch(error => console.log("Erro: " + error))
+    }); return refresh;
+    }, [navigation])
 
-    }, [])
-
+    const logoutAlert = () =>
+    Alert.alert(
+      "Você deseja sair do aplicativo?",
+      "",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Sair", onPress: () => {signOut()} }
+      ]
+    );
 
     return (
         <ScrollView>
@@ -89,9 +103,9 @@ export default function CompanyPerfil() {
                 </View>
             </View>
 
-            <Divider width={3} color='#DCDCDC' />
-
-
+            <TouchableOpacity onPress={()=> {logoutAlert()}} style={{padding:20,marginBottom:10,width:'100%'}}>
+                <Text style={{alignSelf:'center',fontSize:16,fontWeight:'bold'}}>Sair</Text>
+            </TouchableOpacity>
         </ScrollView>
     );
 }

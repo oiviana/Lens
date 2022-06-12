@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Network from "expo-network"
 
 export default function Home() {
-  const { signOut } = useAuth()
+  const { signOut, userData } = useAuth()
   const [avatar, setAvatar] = useState();
 
   async function imagePickerCall() {
@@ -34,21 +34,32 @@ export default function Home() {
    if(!data.uri){
     return;
   }
-  setAvatar(data)
+
+const localUri = data.uri
+const fileName = localUri.split('/').pop()
+
+const typematch = /.(\w+)$/.exec(fileName);
+  let type = typematch ? `image/${typematch[1]}` : `image`;
+  console.log(typematch)
+  console.log(fileName)
+
+  setAvatar({
+    uri: localUri,
+    name: fileName,
+    type
+  })
   }
 
   async function uploadImage() {
-    console.log({avatar})
-    const data = new FormData();
-
-    data.append('avatar', {
-      uri: avatar.uri,
-      // type: 'image/jpeg'
+  
+    const imgData = new FormData();
+    imgData.append('avatar', {
+      ...avatar
     });
-    console.log({data})
 
 
-    api.patch(`uploadImage`, data).then(res => {
+console.log("avatar: ",avatar)
+    api.post(`uploadImage`, imgData).then(res => {
   }).catch(error => console.log("Erro: " + error))
 
   }
@@ -58,15 +69,6 @@ export default function Home() {
     <View style={styles.container}>
       <StatusBar backgroundColor={'white'} barStyle='dark-content' />
 
-      <TouchableOpacity onPress={() => signOut()} style={{
-        backgroundColor: 'pink',
-        width: 100,
-        padding: 30,
-        alignContent: 'center',
-        marginLeft: 100
-      }}>
-        <Text>Sair</Text>
-      </TouchableOpacity>
       <TouchableOpacity onPress={imagePickerCall}>
       <Image
         source={{

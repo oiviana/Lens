@@ -150,6 +150,18 @@ const styles = StyleSheet.create({
     },
     dateRow:{
         flexDirection:'row'
-    }
+    },
+    updateButton: {
+        alignSelf: 'center',
+        backgroundColor: '#5155b4',
+        padding: 18,
+        borderRadius: 6,
+        width: 325,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 30,
+        marginTop: 30,
+        shadowColor: "#000",
+    },
 });
 export { styles }

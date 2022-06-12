@@ -5,7 +5,7 @@ import { Divider } from 'react-native-elements';
 import notifi from '../../assets/notifi';
 import { Entypo } from '@expo/vector-icons';
 
-export default function Notificacoes() {
+export default function CompanyNotif() {
 
 
 

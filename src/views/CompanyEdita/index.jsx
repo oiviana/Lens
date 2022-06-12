@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, ToastAndroid} from 'react-native';
+import { Text, View, ScrollView, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, ToastAndroid } from 'react-native';
 import { Divider } from 'react-native-elements';
 import { styles } from './styles';
 import { Entypo, Feather } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Modalize } from 'react-native-modalize';
 
 
-export default function CompanyEdita() {
+export default function CompanyEdita({navigation}) {
     const { userData } = useAuth();
     const [nome, setNome] = useState();
     const [description, setDescription] = useState();
@@ -86,7 +86,7 @@ export default function CompanyEdita() {
         api.get(`/companyender/${userData.id}`).then(response => {
             setCep(response.data.CEP);
             setRua(response.data.logradouro);
-            setNum(JSON.stringify( response.data.numero));
+            setNum(JSON.stringify(response.data.numero));
             setBairro(response.data.bairro);
             setCidade(response.data.cidade);
             setUf(response.data.UF);
@@ -127,7 +127,7 @@ export default function CompanyEdita() {
         }
         else {
             ToastAndroid.show("Ocorreu um erro, não foi possível atualizar os dados", ToastAndroid.LONG)
-         
+
         }
     }
 
@@ -206,8 +206,12 @@ export default function CompanyEdita() {
                 }} />
             </TouchableOpacity>
 
-            <Divider width={3} color='#DCDCDC' style={{marginBottom:15}}/>
+            <Divider width={3} color='#DCDCDC' style={{ marginBottom: 15 }} />
 
+            <TouchableOpacity style={styles.updateButton}
+                onPress={() => { updateCompany() }}>
+                <Text style={styles.textButton}>Atualizar</Text>
+            </TouchableOpacity>
 
             <View>
 

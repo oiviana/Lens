@@ -121,6 +121,18 @@ const styles = StyleSheet.create({
         alignSelf:'center',
         marginTop: 25
     },
+    selectedButton2: {
+        backgroundColor: '#1e9915',
+        padding: 18,
+        borderRadius: 6,
+        width: 325,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: 30,
+        shadowColor: "#000",
+        alignSelf:'center',
+        marginTop: 25
+    },
     textButton: {
         color: 'white',
         fontSize: 18

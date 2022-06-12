@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         width: '100%',
         backgroundColor: 'transparent',
-        padding: 12
+        padding: 12,
+        minHeight:180
     },
     title: {
         fontSize: 23,
@@ -70,7 +71,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         width: '100%',
         backgroundColor: 'transparent',
-        padding: 12
+        padding: 12,
+        minHeight:230
     },
     title: {
         fontSize: 22,
@@ -108,6 +110,20 @@ const styles = StyleSheet.create({
     },
     formationYear: {
         padding: 2
-    }
+    },
+    contentAtividades:{
+        width:'87%'
+    },
+    atividadetitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        padding: 2,
+        paddingBottom:8
+    },
+    atividadeContent: {
+        fontSize: 16,
+        padding: 2,
+        paddingBottom:12
+    },
 });
 export { styles }
