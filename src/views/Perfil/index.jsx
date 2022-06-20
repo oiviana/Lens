@@ -118,7 +118,7 @@ export default function Perfil({ navigation }) {
                 <Text style={styles.title}>Sobre mim</Text>
 
                 {studentdata.sobre == undefined ? (
-                    <Text style={styles.title}>Adicione sua descrição!</Text>
+                    <Text style={styles.titleEmpty}>Adicione sua descrição!</Text>
                 )
                     : (
                         <Text style={styles.descriptionContent}> {studentdata.sobre} </Text>
@@ -135,7 +135,7 @@ export default function Perfil({ navigation }) {
 
                 {
                     formationdata.length == 0 ? (
-                        <Text style={styles.title}>Adicione suas Formações!</Text>
+                        <Text style={styles.titleEmpty}>Adicione suas Formações!</Text>
                     )
                         :
                         formationdata.map((item, index) => {
@@ -168,7 +168,7 @@ export default function Perfil({ navigation }) {
 
                 {
                     atividadedata.length == 0 ? (
-                        <Text style={styles.title}>Adicione suas Atividades!</Text>
+                        <Text style={styles.titleEmpty}>Adicione suas Atividades!</Text>
                     )
                         :
                         atividadedata.map((item, index) => {

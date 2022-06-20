@@ -64,7 +64,10 @@ const styles = StyleSheet.create({
     descriptionContent: {
         textAlign: 'justify',
         padding: 5,
-        marginBottom: 10
+        marginBottom: 10,
+        fontSize: 16,
+        color: '#000',
+        lineHeight:25
     },
 
     containerFormations: {

@@ -48,7 +48,7 @@ export default function CompanyCandidates({ navigation, route }) {
   function getCandidates({ item }) {
     return (
       <>
-        <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('Candidato', { studentId: item.Estudante.id })}>
+        <TouchableOpacity style={styles.content} onPress={() => navigation.navigate('Candidato', { studentId: item.Estudante.id, idvaga:idvaga})}>
           <Image
             style={styles.companyImage}
             source={{ uri: `${process.env.REACT_APP_BASE_URL}/img/estudante/${item?.Estudante?.imagem}`, }}

@@ -2,8 +2,8 @@ import React, { createContext, useEffect, useState } from 'react';
 import { ToastAndroid } from 'react-native';
 import api from '../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-export const AuthContext = createContext({})
 
+export const AuthContext = createContext({})
 function AuthProvider({ children }) {
 
     const [userData, setUserData] = useState(null);

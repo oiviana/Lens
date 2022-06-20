@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
         padding:5,
         marginBottom:12
     },
+
     content:{
     display:'flex',
     flexDirection:'row',

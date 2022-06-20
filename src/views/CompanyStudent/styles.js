@@ -63,7 +63,10 @@ const styles = StyleSheet.create({
     descriptionContent: {
         textAlign: 'justify',
         padding: 5,
-        marginBottom: 10
+        marginBottom: 10,
+        fontSize: 16,
+        color: '#000',
+        lineHeight:25
     },
 
     containerFormations: {
@@ -109,6 +112,20 @@ const styles = StyleSheet.create({
     formationYear: {
         padding: 2
     },
+    contentAtividades:{
+        width:'87%'
+    },
+    atividadetitle: {
+        fontSize: 18,
+        fontWeight: '700',
+        padding: 2,
+        paddingBottom:8
+    },
+    atividadeContent: {
+        fontSize: 16,
+        padding: 2,
+        paddingBottom:12
+    },
     selectedButton: {
         backgroundColor: '#5155b4',
         padding: 18,
@@ -136,6 +153,13 @@ const styles = StyleSheet.create({
     textButton: {
         color: 'white',
         fontSize: 18
+    },
+    succesButton: {
+        color: 'black',
+        fontSize: 18,
+        padding: 18,
+        marginLeft: 5,
+        marginBottom: 15,
     },
 });
 export { styles }

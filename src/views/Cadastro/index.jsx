@@ -29,6 +29,7 @@ export default function Home() {
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setRg(text) }}
+                    keyboardType='numeric'
                 />
                 <TextInput
                     style={styles.input}
@@ -36,6 +37,7 @@ export default function Home() {
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setCpf(text) }}
+                    keyboardType='numeric'
                 />
                 <TextInput
                     style={styles.input}
@@ -43,6 +45,7 @@ export default function Home() {
                     autoCorrect={false}
                     selectionColor={'#5155b4'}
                     onChangeText={(text) => { setEmail(text) }}
+                    keyboardType='email-address'
                 />
                 <TextInput
                     style={styles.input}

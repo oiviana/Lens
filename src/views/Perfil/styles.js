@@ -63,8 +63,11 @@ const styles = StyleSheet.create({
     },
     descriptionContent: {
         textAlign: 'justify',
+        fontSize: 16,
         padding: 5,
-        marginBottom: 10
+        marginBottom: 10,
+        color: '#000',
+        lineHeight:25
     },
 
     containerFormations: {
@@ -79,6 +82,14 @@ const styles = StyleSheet.create({
         fontWeight: '600',
         padding: 5,
         marginBottom: 12
+    },
+    titleEmpty:{
+        fontSize:20,
+        fontWeight:'600',
+        alignSelf:'center',
+        color:'#5b635e',
+        padding:5,
+        marginTop:18
     },
     content: {
         display: 'flex',

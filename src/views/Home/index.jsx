@@ -7,11 +7,19 @@ import api from '../../services/api';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
-import * as Network from "expo-network"
+
 
 export default function Home() {
-  const { signOut, userData } = useAuth()
   const [avatar, setAvatar] = useState();
+
+  const [valor, setValor] = useState(0);
+  function updateValor(){
+    setValor(valor + 1)
+  }
+
+useEffect(()=>{
+  console.log("Valor atual: ",valor)
+},[valor])
 
   async function imagePickerCall() {
     if (Constants.platform.ios) {
@@ -23,44 +31,44 @@ export default function Home() {
       }
     }
 
-   const data = await ImagePicker.launchImageLibraryAsync({
-     mediaTypes:ImagePicker.MediaTypeOptions.Images,
-     allowsEditing:true
-   })
+    const data = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true
+    })
 
-   if(data.cancelled){
-     return;
-   }
-   if(!data.uri){
-    return;
-  }
+    if (data.cancelled) {
+      return;
+    }
+    if (!data.uri) {
+      return;
+    }
 
-const localUri = data.uri
-const fileName = localUri.split('/').pop()
+    const localUri = data.uri
+    const fileName = localUri.split('/').pop()
 
-const typematch = /.(\w+)$/.exec(fileName);
-  let type = typematch ? `image/${typematch[1]}` : `image`;
-  console.log(typematch)
-  console.log(fileName)
+    const typematch = /.(\w+)$/.exec(fileName);
+    let type = typematch ? `image/${typematch[1]}` : `image`;
+    console.log(typematch)
+    console.log(fileName)
 
-  setAvatar({
-    uri: localUri,
-    name: fileName,
-    type
-  })
+    setAvatar({
+      uri: localUri,
+      name: fileName,
+      type
+    })
   }
 
   async function uploadImage() {
-  
+
     const imgData = new FormData();
     imgData.append('avatar', {
       ...avatar
     });
 
 
-console.log("avatar: ",avatar)
+    console.log("avatar: ", avatar)
     api.post(`uploadImage`, imgData).then(res => {
-  }).catch(error => console.log("Erro: " + error))
+    }).catch(error => console.log("Erro: " + error))
 
   }
 
@@ -68,7 +76,7 @@ console.log("avatar: ",avatar)
 
     <View style={styles.container}>
       <StatusBar backgroundColor={'white'} barStyle='dark-content' />
-
+      {/* 
       <TouchableOpacity onPress={imagePickerCall}>
       <Image
         source={{
@@ -89,9 +97,14 @@ console.log("avatar: ",avatar)
         marginBottom: 20
       }}>
         <Text>Enviar Imagem</Text>
-      </TouchableOpacity>
-
-
+      </TouchableOpacity> */}
+      <View style={styles.welcomeRow}>
+        <Image
+          source={require("../../assets/img/icons/icon_v1.png")}
+          style={styles.logo}
+        />
+        <Text style={styles.welcomeTxt}>Seja bem vindo ao Lens!</Text>
+      </View>
     </View>
 
   );

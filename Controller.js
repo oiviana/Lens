@@ -45,7 +45,6 @@ let empresa = models.Empresa
 let atividade = models.Certificado
 
 app.post('/uploadImage', upload.single('avatar'), (req, res) => {
-    console.log("_parts: ",req.body)
     res.end()
 
 });
@@ -57,7 +56,8 @@ app.get('/readAreas/:id', (req, res) => {
     area.findAll({
         where: {
             id: {
-                [Op.not]: id 
+                [Op.not]: [1, id]
+                 
             }
         }
     }).then(teste => res.send(teste))
@@ -228,20 +228,35 @@ app.get('/checkCandidatura/:estId&:vagaId', (req, res) => {
         .catch(error => console.log(error))
 });
 
-app.get('/checkCandCompany/:id', (req, res) => {
+app.get('/checkCandCompany/:id&:idVaga', (req, res) => {
 const Id = req.params['id']
+const idVaga = req.params['idVaga']
    candidatura.findOne({
-        where: { status: "Candidato", estudanteId:Id},
+        where: { status: "Candidato", estudanteId:Id, vagaId: idVaga},
         include: [{
             model: estudante,
             attributes: ['id', 'nome','email']
         }]
     }).then((response)=>{
+
         if(response != null){
             res.send("Candidato")
         }else{res.send("Selecionado")}
     })
 
+});
+app.patch('/chooseStudent/:id&:idvaga', async (req, res) => {
+    const id = req.params['id'];
+    const idvaga = req.params['idvaga'];
+    let updateCandidate = await candidatura.findOne({
+        where:{estudanteId:id, vagaId:idvaga}
+    }).then((response) => {
+
+        response.status = "Selecionado";
+        response.save();
+        console.log("response", response)
+    }).catch(error => console.log(error))
+    res.send(updateCandidate)
 });
 //CANDIDATURAS
 
@@ -468,6 +483,21 @@ app.delete('/deleteFormation/:id', (req, res) => {
 
 //ATIVIDADES
 
+app.post('/createAtividade', async (req, res) => {
+    await atividade.create({
+        titulo: req.body.titulo,
+        arquivo: req.body.arquivo,
+        tipo: req.body.tipo,
+        estudanteId: req.body.estudanteId,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    }).then(response => res.send(response))
+        .catch((error) => {
+            console.log(error)
+            res.send("erro")
+        })
+});
+
 app.get('/readAtividade/:id', (req, res) => {
     const id = req.params['id']
     atividade.findAll({
@@ -476,6 +506,16 @@ app.get('/readAtividade/:id', (req, res) => {
             ['data_emissao', 'DESC']
         ]
     }).then(teste => res.send(teste))
+        .catch(error => console.log(error))
+});
+
+app.delete('/deleteAtividade/:id', (req, res) => {
+    const id = req.params['id']
+    atividade.destroy({
+        where:{
+            id:id
+        }
+    }).then(() => res.send("deletado"))
         .catch(error => console.log(error))
 });
 

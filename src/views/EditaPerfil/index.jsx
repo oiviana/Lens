@@ -31,6 +31,10 @@ export default function EditaPerfil({ navigation }) {
     const [selectedInst, setSelectedInst] = useState(1);
     const [selectedCurso, setSelectedCurso] = useState("Análise de Sistemas");
     const [selectedPeriodo, setSelectedPeriodo] = useState("Noturno");
+    const [selectedAtividade, setSelectedAtividade] = useState("Palestra");
+
+    const [titleAtividade, setTitleAtividade] = useState();
+    const [desAtividade, setDesAtividade] = useState();
 
     const [avatar, setAvatar] = useState();
 
@@ -61,17 +65,19 @@ export default function EditaPerfil({ navigation }) {
             setInstitutiondata(response.data)
         }).catch(error => console.log("Erro: " + error))
 
-        api.get(`readAtividade/${userData.id}`).then(response => {
-            setAtividadedata(response.data)
-        }).catch(error => console.log("Erro: " + error))
-
         getFormations();
+        getAtividades();
 
     }, [idArea])
 
-    async function getFormations(){
+    async function getFormations() {
         api.get(`readFormacao/${userData.id}`).then(response => {
             setFormationdata(response.data)
+        }).catch(error => console.log("Erro: " + error))
+    }
+    async function getAtividades() {
+        api.get(`readAtividade/${userData.id}`).then(response => {
+            setAtividadedata(response.data)
         }).catch(error => console.log("Erro: " + error))
     }
 
@@ -104,7 +110,6 @@ export default function EditaPerfil({ navigation }) {
     const addresRef = useRef(null); //ref modal de endereço
     function OpenAdrresModal() {
         addresRef.current?.open();
-
         api.get(`/studentender/${userData.id}`).then(response => {
             setCep(response.data.CEP);
             setRua(response.data.logradouro);
@@ -112,13 +117,17 @@ export default function EditaPerfil({ navigation }) {
             setBairro(response.data.bairro);
             setCidade(response.data.cidade);
             setUf(response.data.UF);
-
         }).catch(error => console.log("Erro: " + error))
     }
 
     const formationRef = useRef(null); //ref modal de formações
     function OpenaddFormationModal() {
         formationRef.current?.open();
+    }
+
+    const atividadeRef = useRef(null); //ref modal de formações
+    function OpenAtividadeModal() {
+        atividadeRef.current?.open();
     }
 
     const [date, setDate] = useState(new Date());
@@ -198,6 +207,26 @@ export default function EditaPerfil({ navigation }) {
 
     }
 
+    async function newAtividade() {
+        const response = await api.post('/createAtividade', {
+            titulo: titleAtividade,
+            arquivo: desAtividade,
+            estudanteId: userData.id,
+            tipo: selectedAtividade
+        })
+        console.log(response.data)
+        if (response.data === "erro") {
+            ToastAndroid.show("Ocorreu algum erro", ToastAndroid.LONG)
+            return
+        }
+        else {
+            ToastAndroid.show("Atividade Adicionada", ToastAndroid.LONG)
+            atividadeRef.current?.close();
+            navigation.navigate('Perfil')
+        }
+
+    }
+
     function yearOnly(date) {
         var data = new Date(date),
             anoF = data.getFullYear();
@@ -219,20 +248,48 @@ export default function EditaPerfil({ navigation }) {
                 { text: "Excluir", onPress: () => { delFormation(id) } }
             ]
         );
-        async function delFormation(id) {
-            const response = await api.delete(`/deleteFormation/${id}`)
-            console.log("response: ",response.data)
-            if (response.data == 'deletado') {
-                ToastAndroid.show("Formação Deletada", ToastAndroid.LONG)
-                getFormations();
-                return
-            }
-            else {
-                ToastAndroid.show("Ocorreu um erro, não foi possível excluir", ToastAndroid.LONG)
-    
-            }
+    async function delFormation(id) {
+        const response = await api.delete(`/deleteFormation/${id}`)
+        console.log("response: ", response.data)
+        if (response.data == 'deletado') {
+            ToastAndroid.show("Formação Deletada", ToastAndroid.LONG)
+            getFormations();
+            return
         }
-    
+        else {
+            ToastAndroid.show("Ocorreu um erro, não foi possível excluir", ToastAndroid.LONG)
+
+        }
+    }
+
+    const delAtividadeAlert = (id) =>
+        Alert.alert(
+            "Deseja excluir essa atividade?",
+            "",
+            [
+                {
+                    text: "Cancelar",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Excluir", onPress: () => { delAtividade(id) } }
+            ]
+        );
+
+    async function delAtividade(id) {
+        const response = await api.delete(`/deleteAtividade/${id}`)
+        console.log("response: ", response.data)
+        if (response.data == 'deletado') {
+            ToastAndroid.show("Atividade Deletada", ToastAndroid.LONG)
+            getAtividades();
+            return
+        }
+        else {
+            ToastAndroid.show("Ocorreu um erro, não foi possível excluir", ToastAndroid.LONG)
+
+        }
+    }
+
 
     return (
         <ScrollView>
@@ -335,23 +392,23 @@ export default function EditaPerfil({ navigation }) {
 
                     return (
                         <View key={index}>
-                        <View style={styles.content} >
-                            <View style={styles.contentAtividades}>
-                                <Text style={styles.atividadetitle}>{item.titulo}</Text>
-                                <Text style={styles.atividadeContent}>{item.arquivo}</Text>
-                                <Text style={styles.formationYear}>{formatDate(item.createdAt)} - {item.tipo}</Text>
-                            </View>
-                            <TouchableOpacity style={styles.trashButton} onPress={() => { delFormationAlert(item?.id) }}>
+                            <View style={styles.content} >
+                                <View style={styles.contentAtividades}>
+                                    <Text style={styles.atividadetitle}>{item.titulo}</Text>
+                                    <Text style={styles.atividadeContent}>{item.arquivo}</Text>
+                                    <Text style={styles.formationYear}>{formatDate(item.createdAt)} - {item.tipo}</Text>
+                                </View>
+                                <TouchableOpacity style={styles.trashButton} onPress={() => { delAtividadeAlert(item?.id) }}>
                                     <Feather name='trash-2' size={32} color={'#ba252a'} style={{
                                         marginLeft: 3
                                     }} />
                                 </TouchableOpacity>
+                            </View>
                         </View>
-                    </View>
                     );
 
                 })}
-                <TouchableOpacity style={styles.addformationButton} onPress={OpenaddFormationModal}>
+                <TouchableOpacity style={styles.addformationButton} onPress={OpenAtividadeModal}>
                     <Feather name='plus-circle' size={25} color={'#5f5f63'} style={{
                         marginLeft: 105
                     }} />
@@ -526,8 +583,49 @@ export default function EditaPerfil({ navigation }) {
                     </KeyboardAvoidingView>
                 </Modalize>
 
-            </View>
+                <Modalize
+                    ref={atividadeRef}
+                    adjustToContentHeight={true}
+                    withReactModal={true}
+                >
+                    <KeyboardAvoidingView style={styles.addresModal}>
 
+                        <Text style={styles.nameLabel}>Atividade:</Text>
+                        <TextInput
+                            style={styles.inputname}
+                            autoCorrect={false}
+                            selectionColor={'#5155b4'}
+                            onChangeText={(text) => { setTitleAtividade(text) }}
+                            defaultValue={titleAtividade}
+                        />
+
+                        <Text style={styles.nameLabel}>Descrição da atividade:</Text>
+                        <TextInput
+                            style={styles.inputname}
+                            autoCorrect={false}
+                            selectionColor={'#5155b4'}
+                            onChangeText={(text) => { setDesAtividade(text) }}
+                            defaultValue={desAtividade}
+                        />
+
+                        <Text style={styles.nameLabel}>Tipo de atividade:</Text>
+                        <Picker style={styles.pickerContainer}
+                            selectedValue={selectedAtividade}
+                            onValueChange={(itemValue) =>
+                                setSelectedAtividade(itemValue)}>
+                            <Picker.Item label={"Palestra"} value={"Palestra"} />
+                            <Picker.Item label={"Curso"} value={"Curso"} />
+                            <Picker.Item label={"Workshop"} value={"Workshop"} />
+                        </Picker>
+
+                        <TouchableOpacity style={styles.addresButton}
+                            onPress={() => { newAtividade() }}>
+                            <Text style={styles.textButton}>Adicionar</Text>
+                        </TouchableOpacity>
+
+                    </KeyboardAvoidingView>
+                </Modalize>
+            </View>
         </ScrollView>
 
 
